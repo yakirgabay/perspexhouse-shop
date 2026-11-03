@@ -7,6 +7,7 @@ var SITE = {
   whatsapp: "972524518540",          // Beit HaPerspect's WhatsApp, from perspexhouse.co.il
   phone: "053-9369330",
   address: "הפנינים 21, אשקלון",
+  analytics: { cloudflare_token: "" }, // Cloudflare Web Analytics (decided 4.11). Paste the site token here; empty = nothing loads
   payment: { provider: "whatsapp" }, // "whatsapp" now; "grow" | "payplus" | "cardcom" once Meir's rates are confirmed (site/order.js adapters)
   trust: {
     factory_line: true,              // "מפעל באשקלון מ‑2007" — Meir agreed to the brand, so the line is on

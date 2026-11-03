@@ -49,9 +49,18 @@ a{color:inherit;text-decoration:none}
 .live .ctl{display:grid;gap:10px;padding:14px 16px 16px;border-top:1px solid var(--line)}
 .live .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .live .btn{width:100%} /* price on its own row, button full width: no 3+2 line wrap at 390px (critique P3) */
+@media(min-width:720px){.live .btn{width:auto;justify-self:start}} /* RTL start = right: clear of the floating WhatsApp on the left */
+/* desktop hero: text on the right, the live drawing + price + button on the left, all above the fold (was a 1050px grey box) */
+@media(min-width:900px){
+  .hero{padding-block:40px 24px}
+  .hero .wrap{display:grid;grid-template-columns:1fr 1.25fr;column-gap:48px;grid-template-rows:1fr auto auto auto 1fr;
+    grid-template-areas:". live" "kicker live" "h1 live" "p live" ". live"}
+  .hero .wrap > .kicker{grid-area:kicker} .hero .wrap > h1{grid-area:h1} .hero .wrap > p{grid-area:p} /* direct children only: the hint <p> inside .live grew a phantom column */
+  .live{grid-area:live;margin:0}
+}
 .price{font-weight:800;font-size:1.4rem;color:var(--primary-dark)}
 .price small{font-size:.75rem;font-weight:400;color:var(--muted);margin-inline-start:6px}
-.tag{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:.1em .6em;background:var(--bg2);color:var(--muted);border:1px solid var(--line)} /* neutral: coral read as an error (audit A2 + critique P2) */
+.tag{display:inline-block;font-size:.78rem;font-weight:700;border-radius:999px;padding:.1em .6em;background:var(--bg2);color:var(--muted);border:1px solid var(--line)} /* neutral: coral read as an error (audit A2 + critique P2) */
 input[type=range]{width:100%;accent-color:var(--primary);min-height:44px;cursor:pointer} /* 44px touch row (audit A8) */
 
 /* sections */
@@ -87,20 +96,23 @@ footer{border-top:1px solid var(--line);padding-block:22px 100px;font-size:.8rem
 .dhead .sub{font-size:.95rem;color:var(--muted)}
 .dhead .crumb{font-size:.82rem;color:var(--muted);margin-block-end:4px;display:inline-block;min-height:44px;line-height:44px}
 .dhead .crumb::before{content:"‹ ";color:var(--primary-dark)}
-.stage{grid-area:stage;position:sticky;top:60px;z-index:30;background:var(--bg2);border-bottom:1px solid var(--line)}
+.stage{grid-area:stage;position:sticky;top:60px;z-index:30;background:var(--bg2);border-bottom:1px solid var(--line);display:flex;flex-direction:column}
 .stage.is-empty svg{height:140px} /* cut page before a file is chosen: no half-screen of grey (audit B3) */
-/* mobile: 38vh leaves ~45% of the screen for fields above the sticky bar (was 56vh: a 210px slot, audit B1);
+/* mobile: 35vh leaves ~45% of the screen for fields above the sticky bar (was 56vh: a 210px slot, audit B1);
    while a field is focused the stage shrinks again so the keyboard never hides what is being typed */
-.stage svg{width:100%;height:38vh;display:block;transition:height .3s var(--ease)}
+.stage svg{width:100%;height:35vh;flex:none;display:block;transition:height .3s var(--ease)}
 @media(max-width:719px){.designer:focus-within .stage svg{height:24vh} html:has(.has-cta){scroll-padding-top:calc(60px + 40vh)}}
-.stage .note{position:absolute;inset-inline-start:12px;bottom:10px;font-size:.78rem;color:var(--muted)}
+/* short phones (SE, small Android): the drawing gets 28%, so at least two fields show under it */
+@media(max-width:719px) and (max-height:760px){.stage svg{height:28vh}.designer:focus-within .stage svg{height:20vh}.dhead .sub{display:none}}
+/* the note sits under the drawing, never on it (it covered the file's size label) */
+.stage .note{padding:2px 12px 8px;font-size:.78rem;color:var(--muted);line-height:1.4}
 .fields{grid-area:fields;padding:8px 16px 130px}
-.field{margin-block:14px;display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:10px}
+.field{margin-block:14px;display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:12px} /* number box right beside its name */
 .field > select,.field > textarea,.field > input[type=range],.field > input[type=text],.field > input[type=tel],.field > .qty,.field > .err{grid-column:1/-1}
 .field label{display:flex;justify-content:space-between;font-size:.95rem;font-weight:600;margin-block-end:6px}
 .field label output{color:var(--primary-dark);font-weight:800}
 /* number box beside each slider (audit X1); quantity as a number with +/- */
-.field .val{font-weight:800;color:var(--primary-dark);font-size:.95rem;display:inline-flex;align-items:center;gap:6px;margin-block-end:6px}
+.field .val{font-weight:800;color:var(--primary-dark);font-size:.95rem;display:inline-flex;align-items:center;gap:6px;margin-block-end:6px;justify-self:start}
 .field .numin{width:4.5em;min-height:40px;font:inherit;font-weight:800;font-size:1rem;color:var(--primary-dark);text-align:center;border:1px solid var(--line);border-radius:8px;background:var(--bg);-moz-appearance:textfield}
 .field .numin::-webkit-outer-spin-button,.field .numin::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:var(--rb);overflow:hidden;justify-self:start}
@@ -122,8 +134,10 @@ footer{border-top:1px solid var(--line);padding-block:22px 100px;font-size:.8rem
   .designer{grid-template-columns:1.2fr 1fr;grid-template-areas:"stage head" "stage fields";grid-template-rows:auto 1fr}
   .dhead{padding:20px 16px 0}
   .stage{position:sticky;top:60px;border-bottom:0;border-inline-start:1px solid var(--line);height:calc(100vh - 60px)}
-  .stage svg,.stage.is-empty svg{height:100%}
-  .sticky-cta{position:sticky;inset:auto;padding-inline:0;background:transparent;border:0}
+  .stage svg,.stage.is-empty svg{height:auto;flex:1 1 0;min-height:0}
+  /* order button pinned to the bottom of the fields column: visible without scrolling at 1280x800 */
+  .sticky-cta{position:sticky;inset:auto;bottom:0;padding:12px 0 calc(12px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line);margin-block-start:8px}
+  .fields{padding-bottom:0}
 }
 
 /* order sheet */
@@ -145,5 +159,4 @@ footer{border-top:1px solid var(--line);padding-block:22px 100px;font-size:.8rem
 .dim{fill:#626262;font-family:'Assistant',sans-serif;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 /* pages with a sticky order bar: no floating WhatsApp on phones, it sat on the slider values (audit B2). The bar is the WhatsApp path. */
-.has-cta .fab{display:none}
-@media(min-width:720px){.has-cta .fab{display:grid;bottom:16px}}
+.has-cta .fab{display:none} /* every width: on desktop it sat on "חומר" and on the order button. The order bar is the WhatsApp path. */

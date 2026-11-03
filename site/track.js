@@ -1,5 +1,12 @@
-// One metric: visitors who reach the designer and finish a preview. Events land in localStorage + console now;
-// swap `sink` for GA4/Plausible/PostHog later. Per-device only until then.
+// One metric: visitors who reach the designer and finish a preview. Events land in localStorage + console (per device).
+// Cross-device: Cloudflare Web Analytics counts page views per page (home, each designer, cut) once SITE.analytics has a token.
+// It has no custom events, so "order sent" is counted by the PLX-… numbers in Meir's WhatsApp.
+(function () {
+  var tok = typeof SITE !== "undefined" && SITE.analytics && SITE.analytics.cloudflare_token;
+  if (!tok) return;
+  var s = document.createElement("script"); s.defer = true; s.src = "https://static.cloudflareinsights.com/beacon.min.js";
+  s.setAttribute("data-cf-beacon", JSON.stringify({ token: tok })); document.head.appendChild(s);
+})();
 var track = (function () {
   var KEY = "plx_events";
   function read() { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { return []; } }

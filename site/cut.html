@@ -140,7 +140,7 @@ function draw(res) {
     svg.appendChild(el);
   });
   var t = document.createElementNS(NS, "text"); t.setAttribute("x", ox + w / 2); t.setAttribute("y", oy + h + pad * 0.7);
-  t.setAttribute("class", "dim"); t.setAttribute("text-anchor", "middle"); t.setAttribute("font-size", Math.max(w, h) * 0.045 + 2);
+  t.setAttribute("class", "dim"); t.setAttribute("text-anchor", "middle"); t.setAttribute("font-size", Math.max(w, h) * 0.06 + 3);
   t.textContent = res.bbox_cm.w + " × " + res.bbox_cm.h + " ס״מ"; svg.appendChild(t);
   if (fresh) { Motion.build(svg); fresh = false; } // build once per file, not on every quantity tick
 }
