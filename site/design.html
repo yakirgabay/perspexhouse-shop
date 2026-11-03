@@ -11,28 +11,33 @@
 <link rel="stylesheet" href="motion.css">
 </head>
 <body class="has-cta">
+<a class="skip" href="#main">דילוג לתוכן</a>
 <div class="bar"><div class="wrap">
   <a class="logo" href="index.html"><img id="logo" alt="בית הפרספקס"><span id="brand-sub"></span></a>
   <a class="phone num" id="phone" href="#"></a>
 </div></div>
 <a class="fab" id="fab" target="_blank" rel="noopener" aria-label="וואטסאפ עם בית הפרספקס"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg></a>
 
-<main class="designer">
+<main class="designer" id="main">
+  <header class="dhead">
+    <a class="crumb" href="index.html#products">כל המוצרים</a>
+    <h1 id="title"></h1>
+    <p class="sub" id="sub">כל שינוי מעדכן את ההדמיה ואת המחיר.</p>
+  </header>
   <div class="stage">
     <svg id="stage" role="img" aria-label="הדמיה של המוצר במידות שבחרתם" xmlns="http://www.w3.org/2000/svg"></svg>
     <div class="note" id="note">הדמיה להמחשה, במידות אמיתיות</div>
   </div>
 
   <div class="fields">
-    <h1 id="title"></h1>
-    <p class="sub" id="sub">כל שינוי מעדכן את ההדמיה ואת המחיר.</p>
     <form id="form" autocomplete="off"></form>
 
     <div class="sticky-cta">
       <button class="btn pulse" id="cta" type="button" disabled>
-        <span id="cta-label">הזמנה</span><span class="price num" id="cta-price"></span>
+        <span id="cta-label">להמשיך להזמנה</span><span class="price num" id="cta-price"></span>
       </button>
-      <p class="hint" id="cta-hint"></p>
+      <p class="hint" id="cta-hint" aria-live="polite" aria-atomic="true"></p>
+      <span class="sr" id="price-live" aria-live="polite" aria-atomic="true"></span>
     </div>
   </div>
 </main>
@@ -44,18 +49,28 @@
     <div class="field"><label for="o-delivery">משלוח</label>
       <select id="o-delivery" name="delivery"><option value="delivery">משלוח עד הבית</option><option value="pickup">איסוף עצמי מהמפעל, אשקלון</option></select></div>
     <div class="lines" id="o-lines"></div>
-    <p class="hint" id="o-est"><span class="tag">מחיר משוער</span> אישור סופי תוך יום עסקים, לפני כל חיוב.</p>
+    <p class="hint" id="o-est">מאיר מאשר מחיר סופי ושולח הדמיה לאישור לפני החיתוך. חיוב רק אחרי האישור שלכם.</p>
     <div class="field"><label for="o-name">שם</label><input id="o-name" name="cname" type="text" required></div>
-    <div class="field"><label for="o-phone">טלפון</label><input id="o-phone" name="phone" type="tel" inputmode="tel" class="num" required></div>
+    <div class="field"><label for="o-phone">טלפון</label><input id="o-phone" name="phone" type="tel" inputmode="tel" class="num" required pattern="0[2-9][0-9]{7,8}" title="מספר ישראלי, 9 או 10 ספרות"></div>
     <div class="field"><label for="o-city">עיר</label><input id="o-city" name="city" type="text" required></div>
-    <label class="check"><input type="checkbox" name="confirm" required><span>בדקתי את המידות ואת האיות בהדמיה. פריט בהתאמה אישית מיוצר לפי מה שאישרתי.</span></label>
+    <label class="check"><input type="checkbox" name="confirm" required><span>בדקתי את המידות ואת האיות. לפני החיתוך אקבל הדמיה לאישור.</span></label>
     <div class="actions">
-      <button class="btn" type="submit" id="o-submit">שליחה בוואטסאפ</button>
+      <button class="btn" type="submit" id="o-submit">שליחת ההזמנה בוואטסאפ</button>
       <button class="btn ghost" type="button" onclick="Order.close()">חזרה לעיצוב</button>
     </div>
     <p class="hint" id="o-copy-hint" style="display:none">הוואטסאפ עוד לא מחובר. העתיקו את ההודעה ושלחו לנו:</p>
     <pre class="msgbox" id="o-copy"></pre>
   </form>
+  <div class="panel done" id="o-done" hidden>
+    <h2>ההזמנה <span class="num" id="o-done-id"></span> נפתחה בוואטסאפ</h2>
+    <p>לחצו שם "שלח". מאיר מאשר מחיר סופי ושולח הדמיה לאישור לפני החיתוך. חיוב רק אחרי האישור שלכם.</p>
+    <div class="actions">
+      <a class="btn" id="o-done-wa" target="_blank" rel="noopener">לפתוח את הוואטסאפ שוב</a>
+      <button class="btn ghost" type="button" id="o-done-copy">העתקת ההודעה</button>
+      <a class="btn ghost" href="index.html">לדף הבית</a>
+    </div>
+    <pre class="msgbox" id="o-done-msg"></pre>
+  </div>
 </div>
 
 <script src="../calc/rates.js"></script>
@@ -77,7 +92,7 @@ var FIELDS = {
     { k: "h", l: "גובה", type: "range", min: 10, max: 40, step: 1, unit: "ס״מ" },
     { k: "t", l: "עובי", type: "select", o: T([3, 4, 5]) },
     { k: "material", l: "חומר", type: "select", o: MAT },
-    { k: "qty", l: "כמות", type: "range", min: 1, max: 50, step: 1 }] },
+    { k: "qty", l: "כמות", type: "qty", min: 1, max: 50 }] },
   table_cover: { sub: "כיסוי שקוף למידות השולחן שלכם, עם חורים לכבלים אם צריך.", f: [
     { k: "w", l: "אורך", type: "range", min: 20, max: 300, step: 1, unit: "ס״מ" },
     { k: "d", l: "רוחב", type: "range", min: 20, max: 200, step: 1, unit: "ס״מ" },
@@ -85,28 +100,28 @@ var FIELDS = {
     { k: "holes", l: "חורים לכבלים", type: "range", min: 0, max: 6, step: 1 },
     { k: "hole_d", l: "קוטר חור", type: "range", min: 3, max: 10, step: 1, unit: "ס״מ" },
     { k: "material", l: "חומר", type: "select", o: MAT },
-    { k: "qty", l: "כמות", type: "range", min: 1, max: 20, step: 1 }] },
+    { k: "qty", l: "כמות", type: "qty", min: 1, max: 20 }] },
   display_stand: { sub: "מתקן מדרגות לדלפק או לחלון. כמה מדרגות ובאיזה מידות.", f: [
     { k: "w", l: "רוחב", type: "range", min: 10, max: 100, step: 1, unit: "ס״מ" },
     { k: "d", l: "עומק", type: "range", min: 10, max: 60, step: 1, unit: "ס״מ" },
     { k: "tiers", l: "מדרגות", type: "range", min: 1, max: 5, step: 1 },
     { k: "t", l: "עובי", type: "select", o: T([3, 5, 8]) },
     { k: "material", l: "חומר", type: "select", o: MAT },
-    { k: "qty", l: "כמות", type: "range", min: 1, max: 100, step: 1 }] },
+    { k: "qty", l: "כמות", type: "qty", min: 1, max: 100 }] },
   vase: { sub: "אגרטל מרובע, תפרים אטומים למים.", f: [
     { k: "w", l: "רוחב", type: "range", min: 6, max: 40, step: 1, unit: "ס״מ" },
     { k: "h", l: "גובה", type: "range", min: 10, max: 80, step: 1, unit: "ס״מ" },
     { k: "t", l: "עובי", type: "select", o: T([5, 8]) },
     { k: "material", l: "חומר", type: "select", o: MAT },
-    { k: "qty", l: "כמות", type: "range", min: 1, max: 20, step: 1 }] },
-  judaica_sign: { sub: "שם, ברכה או פסוק, חרוטים בעברית. כתבו ותראו את זה על השלט.", f: [
+    { k: "qty", l: "כמות", type: "qty", min: 1, max: 20 }] },
+  judaica_sign: { sub: "שם, ברכה או פסוק, חרוטים בעברית. כתבו ותראו את זה על השלט. החריטה בפונט Assistant, כמו בהדמיה.", f: [
     { k: "text", l: "הטקסט", type: "textarea", ph: "למשל: משפחת כהן" },
     { k: "w", l: "רוחב", type: "range", min: 10, max: 120, step: 1, unit: "ס״מ" },
     { k: "h", l: "גובה", type: "range", min: 10, max: 90, step: 1, unit: "ס״מ" },
     { k: "t", l: "עובי", type: "select", o: T([3, 5, 8, 10]) },
     { k: "standoffs", l: "תלייה", type: "select", o: [[4, "4 מחזיקי קיר"], [0, "בלי מחזיקים"]] },
     { k: "material", l: "חומר", type: "select", o: MAT },
-    { k: "qty", l: "כמות", type: "range", min: 1, max: 20, step: 1 }] },
+    { k: "qty", l: "כמות", type: "qty", min: 1, max: 20 }] },
   windshield: { sub: "מגן רוח לאופנוע או לטרקטורון מיוצר לפי דגם, ולכן המחיר בהצעה אישית תוך יום עסקים.", quote: true, f: [
     { k: "model", l: "דגם ושנה", type: "text", ph: "למשל: Honda PCX 2022" },
     { k: "height", l: "גובה", type: "select", o: [["standard", "רגיל"], ["tall", "גבוה"], ["short", "קצר (ספורט)"]] },
@@ -115,8 +130,10 @@ var FIELDS = {
 };
 
 var id = new URLSearchParams(location.search).get("p"), P = Pricing.PRODUCTS[id];
-if (!P) { location.replace("index.html"); }
-var F = FIELDS[id], defaults = Object.assign({ qty: 1 }, P.defaults || {}), svg = document.getElementById("stage"), form = document.getElementById("form");
+if (!P) { location.replace("index.html"); throw new Error("unknown product"); }
+var SAVE_KEY = "plx_design_" + id, saved = {};
+try { saved = JSON.parse(localStorage.getItem(SAVE_KEY) || "{}"); } catch (e) {} // a refresh keeps what was designed (audit X3)
+var F = FIELDS[id], defaults = Object.assign({ qty: 1 }, P.defaults || {}, saved), svg = document.getElementById("stage"), form = document.getElementById("form");
 var ils = function (n) { return "₪" + n.toLocaleString("he-IL"); };
 document.getElementById("logo").src = SITE.logo; document.getElementById("brand-sub").textContent = SITE.sub;
 document.getElementById("phone").textContent = SITE.phone; document.getElementById("phone").href = "tel:" + SITE.phone.replace(/-/g, "");
@@ -125,29 +142,53 @@ document.getElementById("title").textContent = P.name;
 document.getElementById("sub").textContent = F.sub;
 document.title = P.name + " · " + SITE.brand + " · " + SITE.sub;
 
+// Every slider has a number box beside it (audit X1): type 115, or drag. Quantity is a number with +/-, never a slider.
 form.innerHTML = F.f.map(function (f) {
-  var v = defaults[f.k] == null ? "" : defaults[f.k], idd = "f-" + f.k;
-  var ctl = f.type === "range" ? '<input type="range" id="' + idd + '" name="' + f.k + '" min="' + f.min + '" max="' + f.max + '" step="' + f.step + '" value="' + v + '">'
+  var v = defaults[f.k] == null ? "" : defaults[f.k], idd = "f-" + f.k, esc = function (s) { return String(s).replace(/"/g, "&quot;"); };
+  var ctl = f.type === "range" ? '<input type="range" id="' + idd + '" name="' + f.k + '" min="' + f.min + '" max="' + f.max + '" step="' + f.step + '" value="' + v + '" aria-valuetext="' + v + " " + (f.unit || f.l) + '">'
+    : f.type === "qty" ? '<div class="qty"><button type="button" data-d="-1" aria-label="פחות">−</button><input type="number" id="' + idd + '" name="' + f.k + '" min="' + f.min + '" max="' + f.max + '" step="1" value="' + v + '" inputmode="numeric" class="num"><button type="button" data-d="1" aria-label="עוד">+</button></div>'
     : f.type === "select" ? '<select id="' + idd + '" name="' + f.k + '">' + f.o.map(function (o) { return '<option value="' + o[0] + '"' + (String(o[0]) === String(v) ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select>"
-    : f.type === "textarea" ? '<textarea id="' + idd + '" name="' + f.k + '" maxlength="60" placeholder="' + (f.ph || "") + '"></textarea>'
-    : '<input type="' + f.type + '" id="' + idd + '" name="' + f.k + '" placeholder="' + (f.ph || "") + '"' + (f.type === "tel" ? ' inputmode="tel" class="num"' : "") + ">";
-  var out = f.type === "range" ? '<output for="' + idd + '" class="num">' + v + (f.unit ? " " + f.unit : "") + "</output>" : "";
-  return '<div class="field" data-k="' + f.k + '"><label for="' + idd + '"><span>' + f.l + "</span>" + out + "</label>" + ctl + '<p class="err"></p></div>';
+    : f.type === "textarea" ? '<textarea id="' + idd + '" name="' + f.k + '" maxlength="60" placeholder="' + (f.ph || "") + '">' + esc(v) + "</textarea>"
+    : '<input type="' + f.type + '" id="' + idd + '" name="' + f.k + '" placeholder="' + (f.ph || "") + '" value="' + esc(v) + '"' + (f.type === "tel" ? ' inputmode="tel" class="num" pattern="0[2-9][0-9]{7,8}" title="מספר ישראלי, 9 או 10 ספרות"' : "") + ">";
+  var out = f.type === "range" ? '<span class="val"><input type="number" class="numin num" id="n-' + f.k + '" data-k="' + f.k + '" min="' + f.min + '" max="' + f.max + '" step="' + f.step + '" value="' + v + '" inputmode="numeric" aria-label="' + f.l + ', הקלדה">' + (f.unit ? " " + f.unit : "") + "</span>" : "";
+  return '<div class="field" data-k="' + f.k + '"><label for="' + idd + '"><span>' + f.l + "</span></label>" + out + ctl + '<p class="err"></p></div>';
 }).join("");
+form.addEventListener("click", function (ev) { // +/- on quantity
+  var b = ev.target.closest("button[data-d]"); if (!b) return;
+  var n = b.parentNode.querySelector("input"), v = Math.min(+n.max, Math.max(+n.min, (+n.value || 1) + +b.dataset.d));
+  n.value = v; n.dispatchEvent(new Event("input", { bubbles: true }));
+});
 
 var cta = document.getElementById("cta"), ctaPrice = document.getElementById("cta-price"), ctaHint = document.getElementById("cta-hint"), note = document.getElementById("note");
 var current = null, previewDone = false, built = false;
 
 function values() {
   var v = {}; F.f.forEach(function (f) {
-    var e = form.elements[f.k]; v[f.k] = f.type === "range" ? +e.value : e.value;
+    var e = form.elements[f.k]; v[f.k] = f.type === "range" || f.type === "qty" ? +e.value : e.value;
     if (f.type === "select" && /^\d+$/.test(e.value)) v[f.k] = +e.value;
-    if (f.type === "range") e.closest(".field").querySelector("output").textContent = e.value + (f.unit ? " " + f.unit : "");
+    if (f.type === "qty" && !(v.qty >= 1)) v[f.k] = 1;
+    if (f.type === "range") e.setAttribute("aria-valuetext", e.value + " " + (f.unit || f.l));
   }); return v;
 }
+function labelled(v) { // the WhatsApp spec in Hebrew words, not engine keys (critique P1): "חומר: חלבי", not "material: frosted"
+  var o = {}; F.f.forEach(function (f) {
+    if (f.k === "qty" || v[f.k] == null || v[f.k] === "") return;
+    var e = form.elements[f.k];
+    o[f.l] = f.type === "select" ? e.selectedOptions[0].text : f.type === "range" ? v[f.k] + (f.unit ? " " + f.unit : "") : v[f.k];
+  }); return o;
+}
+function sync(ev) { // number box <-> slider, then the shared update
+  var t = ev.target;
+  if (t.classList.contains("numin")) { var r = form.elements[t.dataset.k]; if (t.value !== "") { r.value = t.value; var fd = t.closest(".field"); fd.classList.toggle("bad", +r.value !== +t.value); fd.querySelector(".err").textContent = +r.value !== +t.value ? "הטווח: " + r.min + " עד " + r.max : ""; } }
+  else if (t.type === "range") { var n = form.querySelector("#n-" + t.name); if (n) { n.value = t.value; t.closest(".field").classList.remove("bad"); } }
+  update();
+}
+form.addEventListener("change", function (ev) { var t = ev.target; if (t.classList.contains("numin")) { var r = form.elements[t.dataset.k]; t.value = r.value; t.closest(".field").classList.remove("bad"); t.closest(".field").querySelector(".err").textContent = ""; } });
 function update() {
   var v = values(), qty = v.qty || 1; delete v.qty;
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(Object.assign({}, v, { qty: qty }))); } catch (e) {}
   if (F.quote) { cta.disabled = !(v.model && v.cname && v.phone); return; }
+  var he = labelled(v);
   var info = Preview.render(svg, id, v);
   if (!built) { Motion.build(svg); Motion.tilt(svg, 10); built = true; }
   note.textContent = info.msg ? info.msg + " · הדמיה במידות אמיתיות" : "הדמיה להמחשה, במידות אמיתיות";
@@ -156,13 +197,15 @@ function update() {
   if (info.engrave_ratio != null) v.engrave_ratio = info.engrave_ratio;
   var q;
   try { q = Pricing.quote(id, v); } catch (e) { cta.disabled = true; ctaHint.textContent = "ערך מחוץ לטווח"; return; }
+  q.inputs = he;
   current = { q: q, qty: qty };
   ctaPrice.textContent = ils(q.price_inc_vat * qty);
-  ctaHint.innerHTML = (q.estimate ? '<span class="tag">משוער</span> ' : "") + "כולל מע״מ" + (q.vat_inc ? "" : " · לפני מע״מ " + ils(q.price_ex_vat * qty)) + (qty > 1 ? " · " + qty + " יחידות" : "") + (q.shipping.delivery_ils == null ? " · משלוח לפי הצעה" : "");
+  document.getElementById("price-live").textContent = "מחיר " + ils(q.price_inc_vat * qty) + " כולל מע״מ"; // screen readers hear the price move (audit A3)
+  ctaHint.innerHTML = "כולל מע״מ" + (q.vat_inc ? "" : " · לפני מע״מ " + ils(q.price_ex_vat * qty)) + (qty > 1 ? " · " + qty + " יחידות" : "") + (q.shipping.delivery_ils == null ? " · משלוח לפי הצעה" : "") + (q.estimate ? ' <span class="tag">משוער</span>' : ""); // the one place the tag appears (critique P2)
   cta.disabled = !info.ok;
   if (info.ok && !previewDone) { previewDone = true; track("preview_complete", { product: id }); }
 }
-form.addEventListener("input", update);
+form.addEventListener("input", sync);
 cta.addEventListener("click", function () {
   if (F.quote) { submitQuote(); return; }
   Order.open(current.q, current.qty, svg.outerHTML);
@@ -171,7 +214,7 @@ function submitQuote() {
   var v = values(), msg = ["בקשת הצעה: מגן רוח", "דגם: " + v.model, "גובה: " + v.height, v.cname + ", " + v.phone].join("\n");
   try { var all = JSON.parse(localStorage.getItem("plx_quotes") || "[]"); all.push(Object.assign({ created: new Date().toISOString() }, v)); localStorage.setItem("plx_quotes", JSON.stringify(all)); } catch (e) {}
   track("order_submit", { product: id, provider: "quote" });
-  if (SITE.whatsapp) location.href = "https://wa.me/" + SITE.whatsapp + "?text=" + encodeURIComponent(msg);
+  if (SITE.whatsapp) window.open("https://wa.me/" + SITE.whatsapp + "?text=" + encodeURIComponent(msg), "_blank", "noopener");
   else { alert("תודה. הוואטסאפ עוד לא מחובר, נחזור אליכם לפי הטלפון שהשארתם.\n\n" + msg); }
 }
 if (F.quote) { svg.style.display = "none"; note.textContent = ""; document.querySelector(".stage").style.display = "none"; document.getElementById("cta-label").textContent = "בקשת הצעת מחיר"; }

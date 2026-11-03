@@ -35,7 +35,7 @@ var Order = (function () {
       h += '<div class="total"><span>סה״כ כולל מע״מ</span><span class="num">' + ils(t.inc_vat) + "</span></div>";
     }
     box.innerHTML = h;
-    document.getElementById("o-est").style.display = q.estimate ? "" : "none";
+    // the sentence is about the proof before cutting, not the estimate: always shown
   }
   function row(a, b) { return "<div><span>" + a + '</span><span class="num">' + b + "</span></div>"; }
 
@@ -51,16 +51,31 @@ var Order = (function () {
       delivery: f.delivery.value, svg: state.svg, created: new Date().toISOString()
     };
     o.message = ["הזמנה " + o.id, q.name + " × " + t.qty, spec,
-      t.quote_only ? "משלוח לפי הצעה" : "סה״כ כולל מע״מ " + ils(t.inc_vat) + (q.estimate ? " (משוער)" : ""),
+      t.quote_only ? "משלוח לפי הצעה" : "סה״כ כולל מע״מ " + ils(t.inc_vat) + (q.estimate ? " (לאישור)" : ""),
       o.customer.name + ", " + o.customer.phone + ", " + o.customer.city + (o.delivery === "delivery" ? " · משלוח" : " · איסוף")].join("\n");
     try { var all = JSON.parse(localStorage.getItem("plx_orders") || "[]"); all.push(o); localStorage.setItem("plx_orders", JSON.stringify(all)); } catch (e) {}
     track("order_submit", { product: q.product, total: t.inc_vat, provider: SITE.payment.provider });
     var r;
     try { r = PAY[SITE.payment.provider](o); } catch (e) { alert(e.message); return; }
-    if (r.url) { location.href = r.url; return; }
+    if (r.url) { window.open(r.url, "_blank", "noopener"); done(o, r.url); return; } // new tab: the site stays, with the order number (critique P0-3)
     var box = document.getElementById("o-copy"); box.textContent = r.copy; box.style.display = "block";
     document.getElementById("o-copy-hint").style.display = "block";
   }
-  function close() { document.getElementById("sheet").removeAttribute("open"); }
+  function done(o, url) {
+    var sheet = document.getElementById("sheet"), d = document.getElementById("o-done");
+    sheet.querySelector("form.panel").hidden = true; d.hidden = false;
+    document.getElementById("o-done-id").textContent = o.id;
+    document.getElementById("o-done-wa").href = url;
+    var msg = document.getElementById("o-done-msg"); msg.textContent = o.message; msg.style.display = "block";
+    document.getElementById("o-done-copy").onclick = function () {
+      var b = this; (navigator.clipboard ? navigator.clipboard.writeText(o.message) : Promise.reject()).then(function () { b.textContent = "הועתק ✓"; }, function () { msg.focus(); });
+    };
+    d.querySelector("h2").focus && d.querySelector("h2").setAttribute("tabindex", "-1"); d.querySelector("h2").focus();
+  }
+  function close() {
+    var sheet = document.getElementById("sheet"); sheet.removeAttribute("open");
+    var d = document.getElementById("o-done"); if (d && !d.hidden) { d.hidden = true; sheet.querySelector("form.panel").hidden = false; }
+  }
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
   return { open: open, submit: submit, close: close, PAY: PAY };
 })();

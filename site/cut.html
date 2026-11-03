@@ -17,30 +17,33 @@
 .drop span{font-size:.85rem;color:var(--muted)}
 .report{font-size:.88rem;margin-block:10px;display:grid;gap:6px}
 .report .e{color:var(--accent)} .report .w{color:var(--accent)} .report .m{color:var(--muted)}
-.stage .empty{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:.95rem;text-align:center;padding:24px}
+.stage .empty{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:.95rem;text-align:center;padding:16px 24px}
 </style>
 </head>
 <body class="has-cta">
+<a class="skip" href="#main">דילוג לתוכן</a>
 <div class="bar"><div class="wrap">
   <a class="logo" href="index.html"><img id="logo" alt="בית הפרספקס"><span id="brand-sub"></span></a>
   <a class="phone num" id="phone" href="#"></a>
 </div></div>
 <a class="fab" id="fab" target="_blank" rel="noopener" aria-label="וואטסאפ עם בית הפרספקס"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg></a>
 
-<main class="designer">
-  <div class="stage" style="position:relative">
+<main class="designer" id="main">
+  <header class="dhead">
+    <a class="crumb" href="index.html#products">כל המוצרים</a>
+    <h1>חיתוך לפי קובץ</h1>
+    <p class="sub">מעלים SVG או DXF. רואים את הקובץ על הלוח. מקבלים מחיר.</p>
+  </header>
+  <div class="stage is-empty" id="stagebox">
     <svg id="stage" role="img" aria-label="הקווים מהקובץ שלכם על לוח החיתוך" xmlns="http://www.w3.org/2000/svg"></svg>
     <div class="empty" id="empty">העלו קובץ ותראו אותו כאן, במידות אמיתיות, עם מחיר.</div>
     <div class="note" id="note"></div>
   </div>
 
   <div class="fields">
-    <h1>חיתוך לפי קובץ</h1>
-    <p class="sub">מעלים SVG או DXF. רואים את הקובץ על הלוח. מקבלים מחיר.</p>
-
     <label class="drop" id="drop"><input type="file" id="file" accept=".svg,.dxf,image/svg+xml">
       <b>בחרו קובץ או גררו לכאן</b><span>SVG או DXF, עד 5MB</span></label>
-    <p class="hint">שחור או אדום: חיתוך. כחול: חריטת קו. טקסט חייב להיות מומר לקווי מתאר.</p>
+    <p class="hint">בקובץ: שחור או אדום = חיתוך, כחול = חריטת קו. טקסט חייב להיות מומר לקווי מתאר. על הלוח: טורקיז = חיתוך, כחול כהה = חריטה, אדום = בעיה.</p>
     <div class="report" id="report"></div>
 
     <form id="form" autocomplete="off">
@@ -51,13 +54,14 @@
         <select id="f-t" name="t"><option value="3">3 מ״מ</option><option value="4">4 מ״מ</option><option value="5" selected>5 מ״מ</option><option value="8">8 מ״מ</option><option value="10">10 מ״מ</option></select></div>
       <div class="field"><label for="f-material"><span>חומר</span></label>
         <select id="f-material" name="material"><option value="clear">שקוף</option><option value="smoked">מעושן</option><option value="frosted">חלבי</option><option value="colored">צבעוני</option></select></div>
-      <div class="field"><label for="f-qty"><span>כמות</span><output id="qty-out" class="num">1</output></label>
-        <input type="range" id="f-qty" name="qty" min="1" max="50" step="1" value="1"></div>
+      <div class="field"><label for="f-qty"><span>כמות</span></label>
+        <div class="qty"><button type="button" data-d="-1" aria-label="פחות">−</button><input type="number" id="f-qty" name="qty" min="1" max="50" step="1" value="1" inputmode="numeric" class="num"><button type="button" data-d="1" aria-label="עוד">+</button></div></div>
     </form>
 
     <div class="sticky-cta">
-      <button class="btn" id="cta" type="button" disabled><span>הזמנה</span><span class="price num" id="cta-price"></span></button>
-      <p class="hint" id="cta-hint">מינימום להזמנה ₪177 כולל מע״מ. המחיר מאורך החיתוך ומשטח הלוח.</p>
+      <button class="btn" id="cta" type="button" disabled><span>להמשיך להזמנה</span><span class="price num" id="cta-price"></span></button>
+      <p class="hint" id="cta-hint" aria-live="polite" aria-atomic="true">מינימום להזמנה ₪177 כולל מע״מ. המחיר מאורך החיתוך ומשטח הלוח.</p>
+      <span class="sr" id="price-live" aria-live="polite" aria-atomic="true"></span>
     </div>
   </div>
 </main>
@@ -68,18 +72,28 @@
     <div class="field"><label for="o-delivery">משלוח</label>
       <select id="o-delivery" name="delivery"><option value="delivery">משלוח עד הבית</option><option value="pickup">איסוף עצמי מהמפעל, אשקלון</option></select></div>
     <div class="lines" id="o-lines"></div>
-    <p class="hint" id="o-est"><span class="tag">מחיר משוער</span> אישור סופי תוך יום עסקים, אחרי שבודקים את הקובץ.</p>
+    <p class="hint" id="o-est">מאיר בודק את הקובץ ומאשר מחיר סופי תוך יום עסקים. חיוב רק אחרי האישור שלכם.</p>
     <div class="field"><label for="o-name">שם</label><input id="o-name" name="cname" type="text" required></div>
-    <div class="field"><label for="o-phone">טלפון</label><input id="o-phone" name="phone" type="tel" inputmode="tel" class="num" required></div>
+    <div class="field"><label for="o-phone">טלפון</label><input id="o-phone" name="phone" type="tel" inputmode="tel" class="num" required pattern="0[2-9][0-9]{7,8}" title="מספר ישראלי, 9 או 10 ספרות"></div>
     <div class="field"><label for="o-city">עיר</label><input id="o-city" name="city" type="text" required></div>
-    <label class="check"><input type="checkbox" name="confirm" required><span>הקובץ סופי, הטקסט מומר לקווי מתאר, והמידות שמוצגות נכונות. חותכים לפי הקובץ כמו שהוא.</span></label>
+    <label class="check"><input type="checkbox" name="confirm" required><span>הקובץ סופי והטקסט מומר לקווי מתאר. מאיר בודק את הקובץ לפני החיתוך. את הקובץ עצמו מצרפים בוואטסאפ.</span></label>
     <div class="actions">
-      <button class="btn" type="submit">שליחה בוואטסאפ</button>
+      <button class="btn" type="submit">שליחת ההזמנה בוואטסאפ</button>
       <button class="btn ghost" type="button" onclick="Order.close()">חזרה</button>
     </div>
     <p class="hint" id="o-copy-hint" style="display:none">הוואטסאפ עוד לא מחובר. העתיקו את ההודעה ושלחו לנו:</p>
     <pre class="msgbox" id="o-copy"></pre>
   </form>
+  <div class="panel done" id="o-done" hidden>
+    <h2>ההזמנה <span class="num" id="o-done-id"></span> נפתחה בוואטסאפ</h2>
+    <p>לחצו שם "שלח" וצרפו את הקובץ. מאיר בודק אותו ומאשר מחיר סופי תוך יום עסקים. חיוב רק אחרי האישור שלכם.</p>
+    <div class="actions">
+      <a class="btn" id="o-done-wa" target="_blank" rel="noopener">לפתוח את הוואטסאפ שוב</a>
+      <button class="btn ghost" type="button" id="o-done-copy">העתקת ההודעה</button>
+      <a class="btn ghost" href="index.html">לדף הבית</a>
+    </div>
+    <pre class="msgbox" id="o-done-msg"></pre>
+  </div>
 </div>
 
 <script src="../calc/rates.js"></script>
@@ -98,12 +112,18 @@ document.title = "חיתוך לפי קובץ · " + SITE.brand + " · " + SITE.s
 
 var svg = document.getElementById("stage"), report = document.getElementById("report"), form = document.getElementById("form");
 var cta = document.getElementById("cta"), ctaPrice = document.getElementById("cta-price"), ctaHint = document.getElementById("cta-hint");
-var fileText = null, fileName = "", parsed = null, current = null, previewDone = false, unitsField = document.getElementById("units-field");
+var fileText = null, fileName = "", parsed = null, current = null, previewDone = false, unitsField = document.getElementById("units-field"), fresh = false;
 Motion.tilt(svg, 10);
+form.addEventListener("click", function (ev) { // +/- on quantity
+  var b = ev.target.closest("button[data-d]"); if (!b) return;
+  var n = b.parentNode.querySelector("input"), v = Math.min(+n.max, Math.max(+n.min, (+n.value || 1) + +b.dataset.d));
+  n.value = v; n.dispatchEvent(new Event("input", { bubbles: true }));
+});
 
 function draw(res) {
   while (svg.firstChild) svg.removeChild(svg.firstChild);
   document.getElementById("empty").style.display = res.paths.length ? "none" : "";
+  document.getElementById("stagebox").classList.toggle("is-empty", !res.paths.length);
   if (!res.paths.length) return;
   var w = res.bbox_cm.w * 10, h = res.bbox_cm.h * 10, pad = Math.max(w, h) * 0.08 + 10, ox = res.origin[0], oy = res.origin[1];
   svg.setAttribute("viewBox", (ox - pad) + " " + (oy - pad) + " " + (w + 2 * pad) + " " + (h + 2 * pad));
@@ -122,14 +142,16 @@ function draw(res) {
   var t = document.createElementNS(NS, "text"); t.setAttribute("x", ox + w / 2); t.setAttribute("y", oy + h + pad * 0.7);
   t.setAttribute("class", "dim"); t.setAttribute("text-anchor", "middle"); t.setAttribute("font-size", Math.max(w, h) * 0.045 + 2);
   t.textContent = res.bbox_cm.w + " × " + res.bbox_cm.h + " ס״מ"; svg.appendChild(t);
-  Motion.build(svg);
+  if (fresh) { Motion.build(svg); fresh = false; } // build once per file, not on every quantity tick
 }
 
 function load(file) {
   if (!file) return;
-  if (file.size > 5 * 1024 * 1024) { report.innerHTML = '<div class="e">הקובץ גדול מ‑5MB</div>'; return; }
+  if (file.size > 5 * 1024 * 1024) { report.innerHTML = '<div class="e">✗ ' + file.name + ': הקובץ גדול מ‑5MB</div>'; return; }
+  report.innerHTML = '<div class="m">קוראים את ' + file.name + '…</div>'; // visible loading state beside the drop zone (audit X2)
   var r = new FileReader();
-  r.onload = function () { fileText = r.result; fileName = file.name; unitsField.style.display = "none"; track("file_upload", { name: file.name, size: file.size }); update(); };
+  r.onload = function () { fileText = r.result; fileName = file.name; fresh = true; unitsField.style.display = "none"; track("file_upload", { name: file.name, size: file.size }); update(); };
+  r.onerror = function () { report.innerHTML = '<div class="e">✗ לא הצלחנו לקרוא את ' + file.name + '. נסו לשמור שוב ולהעלות</div>'; };
   r.readAsText(file);
 }
 function update() {
@@ -145,14 +167,15 @@ function update() {
   var note = document.getElementById("note"); note.textContent = parsed.ok ? "הקווים מהקובץ, במידות אמיתיות" : (parsed.errors[0] ? "✗ " + parsed.errors[0] : "");
   note.style.color = parsed.ok ? "" : "#f26554"; note.style.fontWeight = parsed.ok ? "" : "700"; // red error beside the preview, not only below the fold
   if (!parsed.ok) { cta.disabled = true; ctaPrice.textContent = ""; return; }
-  var qty = +form.elements.qty.value; document.getElementById("qty-out").textContent = qty;
+  var qty = Math.max(1, +form.elements.qty.value || 1);
   var q;
   try { q = Pricing.quoteFile(parsed, { t: +form.elements.t.value, material: form.elements.material.value }); }
   catch (e) { cta.disabled = true; ctaHint.textContent = "לא ניתן לתמחר: " + e.message; return; }
   q.inputs = { "קובץ": fileName, "מידות": parsed.bbox_cm.w + "×" + parsed.bbox_cm.h + " ס״מ", "חיתוך": parsed.cut_m + " מ׳", "חלקים": parsed.parts, "עובי": q.inputs.t + " מ״מ", "חומר": form.elements.material.selectedOptions[0].text };
   current = { q: q, qty: qty };
   ctaPrice.textContent = ils(q.price_inc_vat * qty);
-  ctaHint.innerHTML = (q.estimate ? '<span class="tag">משוער</span> ' : "") + "כולל מע״מ · לפני מע״מ " + ils(q.price_ex_vat * qty) + (qty > 1 ? " · " + qty + " יחידות" : "") + (q.price_ex_vat === Pricing.RATES.channel.file.min_price_ex ? " · מינימום הזמנה" : "");
+  document.getElementById("price-live").textContent = "מחיר " + ils(q.price_inc_vat * qty) + " כולל מע״מ";
+  ctaHint.innerHTML = "כולל מע״מ · לפני מע״מ " + ils(q.price_ex_vat * qty) + (qty > 1 ? " · " + qty + " יחידות" : "") + (q.price_ex_vat === Pricing.RATES.channel.file.min_price_ex ? " · מינימום הזמנה" : "") + (q.estimate ? ' <span class="tag">משוער</span>' : "");
   cta.disabled = false;
   if (!previewDone) { previewDone = true; track("preview_complete", { product: "cutfile" }); }
 }

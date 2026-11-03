@@ -88,7 +88,7 @@ var Preview = (function () {
     shape("rect", { x: 0, y: 0, width: t, height: H }, svg);                     // back wall
     dim(svg, 0, H + fs * 1.2, D, H + fs * 1.2, cm(i.d) + " עומק", fs);
     dim(svg, -fs * 1.2, 0, -fs * 1.2, H, cm(H / 10) + " גובה", fs);
-    var t2 = el("text", { x: D, y: -fs * 0.6, "font-size": fs, "text-anchor": "end", "class": "dim", direction: "rtl", "font-family": "Heebo, sans-serif" }, svg);
+    var t2 = el("text", { x: D, y: -fs * 0.6, "font-size": fs, "text-anchor": "end", "class": "dim", direction: "rtl", "font-family": "Assistant, sans-serif" }, svg);
     t2.textContent = "רוחב " + cm(i.w) + " · " + n + " מדרגות";
     return { ok: true, msg: n + " מדרגות · " + cm(i.w) + " רוחב" };
   };
@@ -128,12 +128,12 @@ var Preview = (function () {
 
     var margin = Math.max(10, W * 0.08), maxW = W - 2 * margin, maxH = H - 2 * margin;
     var size = Math.min(maxH / (lines.length * 1.25), maxW);
-    var g = el("g", { "font-family": "Heebo, sans-serif", "font-weight": 700, fill: INK, direction: "rtl" }, svg);
+    var g = el("g", { "font-family": "Assistant, sans-serif", "font-weight": 700, fill: INK, direction: "rtl" }, svg);
     var nodes = lines.map(function (l, k) {
       var t = el("text", { x: W / 2, "text-anchor": "middle", "font-size": size }, g); t.textContent = l; return t;
     });
     // Ink measurements on canvas: actualBoundingBox = the glyph itself. SVG getBBox() returns the font box,
-    // ~2.5x taller than the letter in Heebo 700, which let 1.2 mm letters pass the 3 mm gate (synthesis 3.11 §4).
+    // ~2.5x taller than the letter in Assistant 700, which let 1.2 mm letters pass the 3 mm gate (synthesis 3.11 §4).
     var widest = 0; lines.forEach(function (l) { widest = Math.max(widest, ink(l, size).w); });
     if (widest > maxW) { size *= maxW / widest; nodes.forEach(function (t) { t.setAttribute("font-size", size); }); }
     var lineH = size * 1.25, top = (H - lines.length * lineH) / 2;
@@ -149,13 +149,13 @@ var Preview = (function () {
   var ctx = null;
   function ink(text, size) { // ink box of `text` at font-size `size` (same units as the viewBox)
     if (!ctx) ctx = document.createElement("canvas").getContext("2d");
-    ctx.font = "700 " + size + "px Heebo, sans-serif";
+    ctx.font = "700 " + size + "px Assistant, sans-serif";
     var m = ctx.measureText(text);
     var h = (m.actualBoundingBoxAscent || 0) + (m.actualBoundingBoxDescent || 0);
     return { w: m.width, h: h || size * 0.6 }; // fallback only for browsers without actualBoundingBox
   }
   function placeholder(svg, W, H, fs) {
-    var t = el("text", { x: W / 2, y: H / 2, "font-size": fs * 1.6, "text-anchor": "middle", "dominant-baseline": "middle", fill: "rgba(98,98,98,0.35)", "font-family": "Heebo, sans-serif", direction: "rtl" }, svg);
+    var t = el("text", { x: W / 2, y: H / 2, "font-size": fs * 1.6, "text-anchor": "middle", "dominant-baseline": "middle", fill: "rgba(98,98,98,0.35)", "font-family": "Assistant, sans-serif", direction: "rtl" }, svg);
     t.textContent = "השם שלכם";
   }
   function fail(out, msg) { out.ok = false; out.msg = msg; return out; }

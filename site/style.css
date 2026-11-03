@@ -7,6 +7,9 @@
   --r:14px; --rb:10px; --ease:cubic-bezier(.16,1,.3,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
+:focus-visible{outline:3px solid var(--primary-dark);outline-offset:2px} /* keyboard focus on every control (audit A6) */
+.skip{position:absolute;inset-inline-start:16px;top:-60px;z-index:100;background:var(--primary-dark);color:var(--on-primary);padding:10px 14px;border-radius:var(--rb);font-weight:700}
+.skip:focus{top:8px}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
@@ -18,20 +21,21 @@ a{color:inherit;text-decoration:none}
 /* top bar */
 .bar{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--line)}
 .bar .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:12px}
-.logo{display:flex;align-items:center;gap:10px}
+.logo{display:flex;align-items:center;gap:10px;min-height:44px}
 .logo img{height:40px;width:auto;display:block}
 .logo span{font-weight:700;font-size:.95rem;color:var(--primary-dark);border-inline-start:1px solid var(--line);padding-inline-start:10px}
-.phone{font-size:.9rem;color:var(--muted)}
+.phone{font-size:.9rem;color:var(--muted);min-height:44px;display:inline-flex;align-items:center;padding-inline:4px} /* 44px targets without a bigger drawing (audit A9) */
 
 /* floating whatsapp (bottom-left: the right side stays free for the primary button) */
 .fab{position:fixed;inset-inline-end:auto;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:50;width:56px;height:56px;border-radius:50%;background:var(--wa);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.2)}
 .fab svg{width:30px;height:30px;fill:#fff}
 
 /* buttons */
+/* primary button: white on primary-dark = 8.6:1 (white on #1cb3cf was 2.5:1, studio audit A1). Hover brightens, no new color. */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-weight:700;font-size:1rem;cursor:pointer;min-height:52px;
-  background:var(--primary);color:var(--on-primary);border:0;border-radius:var(--rb);padding:.7em 1.4em;transition:background .25s var(--ease)}
-.btn:hover{background:var(--primary-dark)}
-.btn:disabled{opacity:.45;cursor:not-allowed;background:var(--primary)}
+  background:var(--primary-dark);color:var(--on-primary);border:0;border-radius:var(--rb);padding:.7em 1.4em;transition:filter .25s var(--ease)}
+.btn:hover{filter:brightness(1.25)}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
 .btn.ghost{background:var(--bg);color:var(--fg);border:1px solid var(--line)}
 .btn.ghost:hover{border-color:var(--primary);background:var(--bg)}
 
@@ -44,14 +48,16 @@ a{color:inherit;text-decoration:none}
 .live svg{width:100%;aspect-ratio:16/10;display:block;background:var(--bg2)}
 .live .ctl{display:grid;gap:10px;padding:14px 16px 16px;border-top:1px solid var(--line)}
 .live .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.live .btn{width:100%} /* price on its own row, button full width: no 3+2 line wrap at 390px (critique P3) */
 .price{font-weight:800;font-size:1.4rem;color:var(--primary-dark)}
 .price small{font-size:.75rem;font-weight:400;color:var(--muted);margin-inline-start:6px}
-.tag{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:.1em .6em;background:rgba(242,101,84,.12);color:var(--accent)}
-input[type=range]{width:100%;accent-color:var(--primary)}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:.1em .6em;background:var(--bg2);color:var(--muted);border:1px solid var(--line)} /* neutral: coral read as an error (audit A2 + critique P2) */
+input[type=range]{width:100%;accent-color:var(--primary);min-height:44px;cursor:pointer} /* 44px touch row (audit A8) */
 
 /* sections */
 section{padding-block:32px;border-top:1px solid var(--line)}
 .eyebrow{font-size:.8rem;font-weight:700;color:var(--primary-dark)}
+.field label output,.field label .numin{color:var(--primary-dark);font-weight:800}
 h2{font-size:clamp(1.4rem,4.5vw,2rem);margin-block:4px 16px}
 .cards{display:grid;gap:14px;grid-template-columns:1fr 1fr}
 @media(min-width:760px){.cards{grid-template-columns:repeat(3,1fr)}}
@@ -67,23 +73,40 @@ h2{font-size:clamp(1.4rem,4.5vw,2rem);margin-block:4px 16px}
 .steps{display:grid;gap:12px;grid-template-columns:1fr}
 @media(min-width:640px){.steps{grid-template-columns:repeat(3,1fr)}}
 .step{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:var(--bg2)}
-.step .n{font-weight:800;color:var(--primary);font-size:1.3rem}
+.step .n{font-weight:800;color:var(--primary-dark);font-size:1.3rem} /* #1cb3cf on #f7f7f7 was 2.3:1 (audit A13) */
 .step h3{font-size:1rem;margin-block:2px 4px;font-weight:800}
 .step p{font-size:.92rem;color:var(--muted)}
 .trust{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:.9rem;color:var(--muted)}
 footer{border-top:1px solid var(--line);padding-block:22px 100px;font-size:.8rem;color:var(--muted)}
 
 /* designer */
-.designer{display:grid;grid-template-columns:1fr;min-height:calc(100vh - 60px)}
-.stage{position:sticky;top:60px;z-index:30;background:var(--bg2);border-bottom:1px solid var(--line)}
-.stage svg{width:100%;height:56vh;display:block}
+/* order on phones: what it is (head) -> the drawing (stage, sticky) -> the fields (audit B4) */
+.designer{display:grid;grid-template-columns:1fr;grid-template-areas:"head" "stage" "fields";min-height:calc(100vh - 60px)}
+.dhead{grid-area:head;padding:14px 16px 10px}
+.dhead h1{font-size:1.5rem;font-weight:800;margin-block-end:2px}
+.dhead .sub{font-size:.95rem;color:var(--muted)}
+.dhead .crumb{font-size:.82rem;color:var(--muted);margin-block-end:4px;display:inline-block;min-height:44px;line-height:44px}
+.dhead .crumb::before{content:"‹ ";color:var(--primary-dark)}
+.stage{grid-area:stage;position:sticky;top:60px;z-index:30;background:var(--bg2);border-bottom:1px solid var(--line)}
+.stage.is-empty svg{height:140px} /* cut page before a file is chosen: no half-screen of grey (audit B3) */
+/* mobile: 38vh leaves ~45% of the screen for fields above the sticky bar (was 56vh: a 210px slot, audit B1);
+   while a field is focused the stage shrinks again so the keyboard never hides what is being typed */
+.stage svg{width:100%;height:38vh;display:block;transition:height .3s var(--ease)}
+@media(max-width:719px){.designer:focus-within .stage svg{height:24vh} html:has(.has-cta){scroll-padding-top:calc(60px + 40vh)}}
 .stage .note{position:absolute;inset-inline-start:12px;bottom:10px;font-size:.78rem;color:var(--muted)}
-.fields{padding:16px 16px 130px}
-.fields h1{font-size:1.5rem;font-weight:800;margin-block-end:2px}
-.fields .sub{font-size:.95rem;color:var(--muted);margin-block-end:14px}
-.field{margin-block:14px}
+.fields{grid-area:fields;padding:8px 16px 130px}
+.field{margin-block:14px;display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:10px}
+.field > select,.field > textarea,.field > input[type=range],.field > input[type=text],.field > input[type=tel],.field > .qty,.field > .err{grid-column:1/-1}
 .field label{display:flex;justify-content:space-between;font-size:.95rem;font-weight:600;margin-block-end:6px}
 .field label output{color:var(--primary-dark);font-weight:800}
+/* number box beside each slider (audit X1); quantity as a number with +/- */
+.field .val{font-weight:800;color:var(--primary-dark);font-size:.95rem;display:inline-flex;align-items:center;gap:6px;margin-block-end:6px}
+.field .numin{width:4.5em;min-height:40px;font:inherit;font-weight:800;font-size:1rem;color:var(--primary-dark);text-align:center;border:1px solid var(--line);border-radius:8px;background:var(--bg);-moz-appearance:textfield}
+.field .numin::-webkit-outer-spin-button,.field .numin::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:var(--rb);overflow:hidden;justify-self:start}
+.qty button{width:48px;height:48px;border:0;background:var(--bg2);color:var(--primary-dark);font:inherit;font-size:1.4rem;font-weight:800;cursor:pointer}
+.qty input{width:64px;height:48px;border:0;border-inline:1px solid var(--line);text-align:center;font:inherit;font-weight:800;font-size:1.05rem;color:var(--fg);-moz-appearance:textfield}
+.qty input::-webkit-outer-spin-button,.qty input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .field select,.field input[type=text],.field input[type=tel],.field textarea{width:100%;font:inherit;font-size:1rem;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:var(--rb);padding:.65em .8em;outline:0}
 .field select:focus,.field input:focus,.field textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(28,179,207,.25)}
 .field textarea{min-height:76px;resize:vertical}
@@ -95,10 +118,11 @@ footer{border-top:1px solid var(--line);padding-block:22px 100px;font-size:.8rem
 .sticky-cta{position:fixed;inset-inline:0;bottom:0;z-index:45;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line)}
 .sticky-cta .btn{width:100%;font-size:1.05rem;justify-content:space-between}
 .sticky-cta .price{color:var(--on-primary);font-size:1.15rem}
-@media(min-width:900px){
-  .designer{grid-template-columns:1.2fr 1fr}
+@media(min-width:720px){ /* tablet and up: drawing beside the fields (audit R1) */
+  .designer{grid-template-columns:1.2fr 1fr;grid-template-areas:"stage head" "stage fields";grid-template-rows:auto 1fr}
+  .dhead{padding:20px 16px 0}
   .stage{position:sticky;top:60px;border-bottom:0;border-inline-start:1px solid var(--line);height:calc(100vh - 60px)}
-  .stage svg{height:100%}
+  .stage svg,.stage.is-empty svg{height:100%}
   .sticky-cta{position:sticky;inset:auto;padding-inline:0;background:transparent;border:0}
 }
 
@@ -113,11 +137,13 @@ footer{border-top:1px solid var(--line);padding-block:22px 100px;font-size:.8rem
 .lines div:first-child{border-top:0}
 .lines .total{font-weight:800;color:var(--primary-dark);background:var(--bg2)}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:.92rem;margin-block:12px}
-.check input{margin-top:4px;accent-color:var(--primary)}
+.check input{margin-top:2px;width:20px;height:20px;flex:none;accent-color:var(--primary-dark)}
+.panel.done p{margin-block:8px 14px;color:var(--muted)}
 .panel .actions{display:grid;gap:8px;margin-block-start:12px}
 .msgbox{font-size:.8rem;white-space:pre-wrap;background:var(--bg2);border:1px solid var(--line);border-radius:var(--rb);padding:10px;margin-block-start:10px;display:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .dim{fill:#626262;font-family:'Assistant',sans-serif;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-.has-cta .fab{bottom:calc(96px + env(safe-area-inset-bottom))}
-@media(min-width:900px){.has-cta .fab{bottom:16px}}
+/* pages with a sticky order bar: no floating WhatsApp on phones, it sat on the slider values (audit B2). The bar is the WhatsApp path. */
+.has-cta .fab{display:none}
+@media(min-width:720px){.has-cta .fab{display:grid;bottom:16px}}
