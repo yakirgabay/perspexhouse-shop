@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>בית הפרספקס · הזמנה אונליין</title>
+<meta name="description" content="בוחרים מידות, רואים את המוצר, מקבלים מחיר. מתקני ממתקים, כיסויי שולחן, מתקני תצוגה, שלטים וחיתוך לפי קובץ. מפעל באשקלון מ‑2007.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="motion.css">
+</head>
+<body>
+<div class="bar"><div class="wrap">
+  <a class="logo" href="index.html"><img id="logo" alt="בית הפרספקס"><span id="brand-sub"></span></a>
+  <a class="phone num" id="phone" href="#"></a>
+</div></div>
+<a class="fab" id="fab" target="_blank" rel="noopener" aria-label="וואטסאפ עם בית הפרספקס"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg></a>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">מפעל באשקלון מ‑2007 · חיתוך מדויק לפי מידה</div>
+  <h1 class="display" id="h1"></h1>
+  <p id="h1sub"></p>
+  <div class="live" id="live">
+    <svg id="hero-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="הדמיה חיה של המוצר"></svg>
+    <div class="ctl" id="hero-ctl"></div>
+  </div>
+</div></header>
+
+<section id="products"><div class="wrap">
+  <div class="eyebrow">מה מזמינים</div>
+  <h2 class="display">בוחרים. רואים. מזמינים.</h2>
+  <div class="cards" id="cards"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">איך זה עובד</div>
+  <h2 class="display">שלושה צעדים.</h2>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><h3>בוחרים מידות</h3><p>מידות, עובי, חומר. ההדמיה מתעדכנת תוך כדי.</p></div>
+    <div class="step"><div class="n">2</div><h3>רואים מחיר</h3><p>המחיר מחושב מהמידות שבחרתם. כולל מע״מ.</p></div>
+    <div class="step"><div class="n">3</div><h3>מזמינים בוואטסאפ</h3><p>שולחים את ההזמנה. מאשרים תוך יום עסקים, ואז מייצרים.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="trust" id="trust">
+    <span>חיתוך מדויק, קצוות נקיים</span>
+    <span>כל פריט נבדק לפני המשלוח</span>
+    <span>גם יחידה אחת</span>
+  </div>
+</div></section>
+
+<footer><div class="wrap"><span id="foot"></span></div></footer>
+
+<script src="../calc/rates.js"></script>
+<script src="../calc/pricing.js"></script>
+<script src="config.js"></script>
+<script src="track.js"></script>
+<script src="preview.js"></script>
+<script src="motion.js"></script>
+<script>
+var ils = function (n) { return "₪" + n.toLocaleString("he-IL"); };
+document.getElementById("logo").src = SITE.logo; document.getElementById("brand-sub").textContent = SITE.sub;
+document.getElementById("phone").textContent = SITE.phone; document.getElementById("phone").href = "tel:" + SITE.phone.replace(/-/g, "");
+document.getElementById("fab").href = "https://wa.me/" + SITE.whatsapp;
+document.getElementById("foot").textContent = SITE.brand + " · " + SITE.address + " · " + SITE.phone + " · המחירים באתר משוערים עד אישור סופי";
+document.title = SITE.brand + " · " + SITE.sub;
+if (SITE.trust.factory_line) document.getElementById("trust").insertAdjacentHTML("afterbegin", "<span>מפעל באשקלון מ‑2007</span>");
+if (SITE.trust.lead_time) document.getElementById("trust").insertAdjacentHTML("beforeend", "<span>אספקה " + SITE.trust.lead_time + "</span>");
+
+// --- hero: one live control on the hero product (SITE.hero). Copy: docs/copy-HE.md ---
+var HERO = {
+  candy_dispenser: { h1: "מתקן ממתקים לדלפק. במידות שלכם.", sub: "גררו את מספר התאים. המתקן והמחיר משתנים.", k: "cells", l: "תאים", min: 1, max: 8 },
+  judaica_sign: { h1: "השם שלכם, חרוט בפרספקס.", sub: "כתבו שם ותראו אותו על השלט, עם מחיר.", k: "text" },
+  table_cover: { h1: "כיסוי שקוף למידות השולחן.", sub: "אורך, רוחב, חורים לכבלים. המחיר מהמידות.", k: "w", l: "אורך", min: 20, max: 300 },
+  display_stand: { h1: "מתקן תצוגה במידות שלכם.", sub: "כמה מדרגות? המחיר מתעדכן.", k: "tiers", l: "מדרגות", min: 1, max: 5 },
+  vase: { h1: "אגרטל פרספקס במידות שלכם.", sub: "גובה ורוחב, והמחיר מתעדכן.", k: "h", l: "גובה", min: 10, max: 80 }
+};
+var hid = HERO[SITE.hero] ? SITE.hero : "candy_dispenser", H = HERO[hid], hp = Pricing.PRODUCTS[hid], hsvg = document.getElementById("hero-svg");
+document.getElementById("h1").textContent = H.h1; document.getElementById("h1sub").textContent = H.sub;
+var ctl = document.getElementById("hero-ctl");
+ctl.innerHTML = (H.k === "text"
+  ? '<input type="text" id="hero-in" maxlength="40" placeholder="כתבו שם" style="font:inherit;font-size:1.1rem;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:.6em .8em">'
+  : '<div class="row"><span>' + H.l + ' <output id="hero-out" class="num"></output></span></div><input type="range" id="hero-in" min="' + H.min + '" max="' + H.max + '" step="1" value="' + hp.defaults[H.k] + '">')
+  + '<div class="row"><span class="price num" id="hero-price"></span><a class="btn" id="hero-go">להמשיך לעיצוב</a></div><p class="hint" id="hero-hint"></p>';
+var hin = document.getElementById("hero-in"), first = true;
+function heroUpdate() {
+  var v = Object.assign({}, hp.defaults); v[H.k] = H.k === "text" ? hin.value : +hin.value;
+  var o = document.getElementById("hero-out"); if (o) o.textContent = hin.value;
+  var info = Preview.render(hsvg, hid, v); if (info.engrave_ratio != null) v.engrave_ratio = info.engrave_ratio;
+  if (first) { Motion.build(hsvg); first = false; }
+  var q = Pricing.quote(hid, v);
+  document.getElementById("hero-price").innerHTML = ils(q.price_inc_vat) + "<small>כולל מע״מ" + (q.vat_inc ? "" : " · לפני מע״מ " + ils(q.price_ex_vat)) + (q.estimate ? " · משוער" : "") + "</small>";
+  document.getElementById("hero-hint").textContent = info.ok ? "" : info.msg;
+  document.getElementById("hero-go").href = "design.html?p=" + hid;
+}
+hin.addEventListener("input", heroUpdate);
+Motion.tilt(hsvg, 10);
+document.getElementById("hero-go").addEventListener("click", function () { track("cta_click", { product: hid, where: "hero" }); });
+
+// --- product cards, each with its own default preview and starting price (inc VAT) ---
+var ORDER = ["candy_dispenser", "table_cover", "display_stand", "vase", "judaica_sign", "windshield"];
+var cards = document.getElementById("cards");
+cards.innerHTML = ORDER.map(function (id) {
+  var p = Pricing.PRODUCTS[id], meta;
+  if (p.quote_only) meta = "<span>לפי דגם</span><b>הצעת מחיר</b>";
+  else { var q = Pricing.quote(id); meta = "<span>כולל מע״מ</span><b class='num'>מ‑" + ils(q.price_inc_vat) + "</b>"; }
+  return '<a class="card' + (id === hid ? " hero-card" : "") + '" href="design.html?p=' + id + '" data-id="' + id + '"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg><div class="body"><h3>' + p.name + '</h3><div class="meta">' + meta + "</div></div></a>";
+}).join("");
+var fileMin = Math.round(Pricing.RATES.channel.file.min_price_ex * (1 + Pricing.RATES.vat));
+cards.insertAdjacentHTML("beforeend", '<a class="card" href="cut.html" data-id="cutfile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect x="70" y="50" width="260" height="200" rx="6" fill="rgba(28,179,207,.06)" stroke="#d1d1d1" stroke-width="2" stroke-dasharray="8 6"/><polygon points="120,100 280,100 280,200 200,200 200,150 120,150" fill="rgba(28,179,207,.14)" stroke="#1cb3cf" stroke-width="2"/><circle cx="250" cy="130" r="12" fill="#fff" stroke="#1cb3cf" stroke-width="2"/></svg><div class="body"><h3>יש לכם קובץ? חיתוך לפי קובץ</h3><div class="meta"><span>SVG או DXF</span><b class="num">מ‑' + ils(fileMin) + '</b></div></div></a>');
+ORDER.forEach(function (id) {
+  var c = cards.querySelector('[data-id="' + id + '"]'), p = Pricing.PRODUCTS[id];
+  if (!p.quote_only) Preview.render(c.querySelector("svg"), id, Object.assign({}, p.defaults, id === "judaica_sign" ? { text: "משפחת לוי" } : {}));
+  else c.querySelector("svg").outerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><path d="M60 230 Q200 40 340 230 L300 240 Q200 110 100 240 Z" fill="rgba(28,179,207,.14)" stroke="#1cb3cf" stroke-width="2"/></svg>';
+  c.addEventListener("click", function () { track("cta_click", { product: id, where: "card" }); });
+});
+cards.querySelector('[data-id="cutfile"]').addEventListener("click", function () { track("cta_click", { product: "cutfile", where: "card" }); });
+track("page_view");
+document.fonts ? document.fonts.ready.then(heroUpdate) : heroUpdate();
+heroUpdate();
+</script>
+</body>
+</html>

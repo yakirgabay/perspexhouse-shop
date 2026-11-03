@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>שלושת האפקטים</title>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="motion.css">
+<style>
+main{max-width:720px;margin-inline:auto;padding:24px 16px 80px}
+.demo{border:1px solid var(--line);border-radius:var(--r);background:var(--bg2);margin-block:16px;overflow:hidden}
+.demo svg{width:100%;aspect-ratio:16/10;display:block;touch-action:none}
+.demo .row{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px 14px;border-top:1px solid var(--line);background:var(--bg)}
+h1{font-size:1.5rem;font-weight:800}
+h2{font-size:1.1rem;margin:0}
+p{color:var(--muted);font-size:.95rem}
+</style>
+</head>
+<body>
+<main>
+<h1>שלושת האפקטים, בקוד</h1>
+<p>למסירה לפרויקט ולסטודיו. אותו SVG, אותם tokens. בלי תלת ממד, בלי חלקיקים.</p>
+
+<div class="demo">
+  <svg id="s1" xmlns="http://www.w3.org/2000/svg"></svg>
+  <div class="row"><h2>1 + 2 · בנייה פרמטרית והתמלאות</h2><button class="btn" id="b1" type="button">הפעל שוב</button></div>
+</div>
+<div class="demo">
+  <svg id="s2" xmlns="http://www.w3.org/2000/svg"></svg>
+  <div class="row"><h2>3 · הטיה 10°</h2><span class="muted">גררו או העבירו עכבר</span></div>
+</div>
+<div class="demo">
+  <svg id="s3" xmlns="http://www.w3.org/2000/svg"></svg>
+  <div class="row"><h2>הכל יחד: גוררים תאים</h2><input type="range" id="r3" min="1" max="8" value="4" style="width:40%"></div>
+</div>
+</main>
+<script src="../calc/rates.js"></script>
+<script src="../calc/pricing.js"></script>
+<script src="preview.js"></script>
+<script src="motion.js"></script>
+<script>
+var d = Pricing.PRODUCTS.candy_dispenser.defaults;
+var s1 = document.getElementById("s1"), s2 = document.getElementById("s2"), s3 = document.getElementById("s3");
+Preview.render(s1, "candy_dispenser", d); Motion.build(s1);
+document.getElementById("b1").onclick = function () { Motion.build(s1); };
+Preview.render(s2, "judaica_sign", Object.assign({}, Pricing.PRODUCTS.judaica_sign.defaults, { text: "משפחת כהן" })); Motion.tilt(s2, 10);
+var r3 = document.getElementById("r3"); Preview.render(s3, "candy_dispenser", d); Motion.build(s3); Motion.tilt(s3, 10);
+r3.oninput = function () { Preview.render(s3, "candy_dispenser", Object.assign({}, d, { cells: +r3.value })); Motion.build(s3); };
+</script>
+</body>
+</html>

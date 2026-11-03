@@ -1,0 +1,20 @@
+/* The three allowed effects (docs/brand-brief-HE.md §7). Nothing else moves.
+   Build uses a clip wipe on the <svg>, not stroke-dasharray: Safari treats pathLength units as px under
+   vector-effect:non-scaling-stroke and leaves the lines broken (seen 3.11 in WebKit). */
+
+/* 1. Parametric build: the drawing is revealed from right to left (RTL), 600ms. */
+.build { animation: plx-build 600ms cubic-bezier(.16,1,.3,1) both; }
+@keyframes plx-build { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0 0 0 0); } }
+
+/* 2. Fill: the acrylic fills in after the lines, 400ms. */
+.build .glass { animation: plx-fill 400ms 600ms ease both; }
+@keyframes plx-fill { from { fill-opacity: 0; } to { fill-opacity: 1; } }
+
+/* 3. Tilt: up to 10 degrees on drag or hover, back on release. Flat rotation, no 3D. */
+.tilt { transition: transform .4s cubic-bezier(.16,1,.3,1); transform-origin: 50% 60%; will-change: transform; }
+.tilt.dragging { transition: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .build, .build .glass { animation: none; clip-path: none; fill-opacity: 1; }
+  .tilt { transition: none; transform: none !important; }
+}

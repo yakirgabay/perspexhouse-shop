@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>עיצוב בהתאמה אישית</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="motion.css">
+</head>
+<body class="has-cta">
+<div class="bar"><div class="wrap">
+  <a class="logo" href="index.html"><img id="logo" alt="בית הפרספקס"><span id="brand-sub"></span></a>
+  <a class="phone num" id="phone" href="#"></a>
+</div></div>
+<a class="fab" id="fab" target="_blank" rel="noopener" aria-label="וואטסאפ עם בית הפרספקס"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg></a>
+
+<main class="designer">
+  <div class="stage">
+    <svg id="stage" role="img" aria-label="הדמיה של המוצר במידות שבחרתם" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="note" id="note">הדמיה להמחשה, במידות אמיתיות</div>
+  </div>
+
+  <div class="fields">
+    <h1 id="title"></h1>
+    <p class="sub" id="sub">כל שינוי מעדכן את ההדמיה ואת המחיר.</p>
+    <form id="form" autocomplete="off"></form>
+
+    <div class="sticky-cta">
+      <button class="btn pulse" id="cta" type="button" disabled>
+        <span id="cta-label">הזמנה</span><span class="price num" id="cta-price"></span>
+      </button>
+      <p class="hint" id="cta-hint"></p>
+    </div>
+  </div>
+</main>
+
+<!-- order sheet -->
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="o-title">
+  <form class="panel" onsubmit="Order.submit(event)">
+    <h2 id="o-title"></h2>
+    <div class="field"><label for="o-delivery">משלוח</label>
+      <select id="o-delivery" name="delivery"><option value="delivery">משלוח עד הבית</option><option value="pickup">איסוף עצמי מהמפעל, אשקלון</option></select></div>
+    <div class="lines" id="o-lines"></div>
+    <p class="hint" id="o-est"><span class="tag">מחיר משוער</span> אישור סופי תוך יום עסקים, לפני כל חיוב.</p>
+    <div class="field"><label for="o-name">שם</label><input id="o-name" name="cname" type="text" required></div>
+    <div class="field"><label for="o-phone">טלפון</label><input id="o-phone" name="phone" type="tel" inputmode="tel" class="num" required></div>
+    <div class="field"><label for="o-city">עיר</label><input id="o-city" name="city" type="text" required></div>
+    <label class="check"><input type="checkbox" name="confirm" required><span>בדקתי את המידות ואת האיות בהדמיה. פריט בהתאמה אישית מיוצר לפי מה שאישרתי.</span></label>
+    <div class="actions">
+      <button class="btn" type="submit" id="o-submit">שליחה בוואטסאפ</button>
+      <button class="btn ghost" type="button" onclick="Order.close()">חזרה לעיצוב</button>
+    </div>
+    <p class="hint" id="o-copy-hint" style="display:none">הוואטסאפ עוד לא מחובר. העתיקו את ההודעה ושלחו לנו:</p>
+    <pre class="msgbox" id="o-copy"></pre>
+  </form>
+</div>
+
+<script src="../calc/rates.js"></script>
+<script src="../calc/pricing.js"></script>
+<script src="config.js"></script>
+<script src="track.js"></script>
+<script src="preview.js"></script>
+<script src="motion.js"></script>
+<script src="order.js"></script>
+<script>
+// Field definitions per product. Bounds mirror calc/pricing.js; the engine still rejects anything outside them.
+var MAT = [["clear", "שקוף"], ["smoked", "מעושן"], ["frosted", "חלבי"], ["colored", "צבעוני"]];
+var T = function (list) { return list.map(function (t) { return [t, t + " מ״מ"]; }); };
+var FIELDS = {
+  candy_dispenser: { sub: "כמה תאים ובאיזה מידות. ההדמיה והמחיר מתעדכנים.", f: [
+    { k: "cells", l: "תאים", type: "range", min: 1, max: 8, step: 1 },
+    { k: "w", l: "רוחב תא", type: "range", min: 10, max: 40, step: 1, unit: "ס״מ" },
+    { k: "d", l: "עומק", type: "range", min: 15, max: 40, step: 1, unit: "ס״מ" },
+    { k: "h", l: "גובה", type: "range", min: 10, max: 40, step: 1, unit: "ס״מ" },
+    { k: "t", l: "עובי", type: "select", o: T([3, 4, 5]) },
+    { k: "material", l: "חומר", type: "select", o: MAT },
+    { k: "qty", l: "כמות", type: "range", min: 1, max: 50, step: 1 }] },
+  table_cover: { sub: "כיסוי שקוף למידות השולחן שלכם, עם חורים לכבלים אם צריך.", f: [
+    { k: "w", l: "אורך", type: "range", min: 20, max: 300, step: 1, unit: "ס״מ" },
+    { k: "d", l: "רוחב", type: "range", min: 20, max: 200, step: 1, unit: "ס״מ" },
+    { k: "t", l: "עובי", type: "select", o: T([3, 5, 8, 10]) },
+    { k: "holes", l: "חורים לכבלים", type: "range", min: 0, max: 6, step: 1 },
+    { k: "hole_d", l: "קוטר חור", type: "range", min: 3, max: 10, step: 1, unit: "ס״מ" },
+    { k: "material", l: "חומר", type: "select", o: MAT },
+    { k: "qty", l: "כמות", type: "range", min: 1, max: 20, step: 1 }] },
+  display_stand: { sub: "מתקן מדרגות לדלפק או לחלון. כמה מדרגות ובאיזה מידות.", f: [
+    { k: "w", l: "רוחב", type: "range", min: 10, max: 100, step: 1, unit: "ס״מ" },
+    { k: "d", l: "עומק", type: "range", min: 10, max: 60, step: 1, unit: "ס״מ" },
+    { k: "tiers", l: "מדרגות", type: "range", min: 1, max: 5, step: 1 },
+    { k: "t", l: "עובי", type: "select", o: T([3, 5, 8]) },
+    { k: "material", l: "חומר", type: "select", o: MAT },
+    { k: "qty", l: "כמות", type: "range", min: 1, max: 100, step: 1 }] },
+  vase: { sub: "אגרטל מרובע, תפרים אטומים למים.", f: [
+    { k: "w", l: "רוחב", type: "range", min: 6, max: 40, step: 1, unit: "ס״מ" },
+    { k: "h", l: "גובה", type: "range", min: 10, max: 80, step: 1, unit: "ס״מ" },
+    { k: "t", l: "עובי", type: "select", o: T([5, 8]) },
+    { k: "material", l: "חומר", type: "select", o: MAT },
+    { k: "qty", l: "כמות", type: "range", min: 1, max: 20, step: 1 }] },
+  judaica_sign: { sub: "שם, ברכה או פסוק, חרוטים בעברית. כתבו ותראו את זה על השלט.", f: [
+    { k: "text", l: "הטקסט", type: "textarea", ph: "למשל: משפחת כהן" },
+    { k: "w", l: "רוחב", type: "range", min: 10, max: 120, step: 1, unit: "ס״מ" },
+    { k: "h", l: "גובה", type: "range", min: 10, max: 90, step: 1, unit: "ס״מ" },
+    { k: "t", l: "עובי", type: "select", o: T([3, 5, 8, 10]) },
+    { k: "standoffs", l: "תלייה", type: "select", o: [[4, "4 מחזיקי קיר"], [0, "בלי מחזיקים"]] },
+    { k: "material", l: "חומר", type: "select", o: MAT },
+    { k: "qty", l: "כמות", type: "range", min: 1, max: 20, step: 1 }] },
+  windshield: { sub: "מגן רוח לאופנוע או לטרקטורון מיוצר לפי דגם, ולכן המחיר בהצעה אישית תוך יום עסקים.", quote: true, f: [
+    { k: "model", l: "דגם ושנה", type: "text", ph: "למשל: Honda PCX 2022" },
+    { k: "height", l: "גובה", type: "select", o: [["standard", "רגיל"], ["tall", "גבוה"], ["short", "קצר (ספורט)"]] },
+    { k: "cname", l: "שם", type: "text" },
+    { k: "phone", l: "טלפון", type: "tel" }] }
+};
+
+var id = new URLSearchParams(location.search).get("p"), P = Pricing.PRODUCTS[id];
+if (!P) { location.replace("index.html"); }
+var F = FIELDS[id], defaults = Object.assign({ qty: 1 }, P.defaults || {}), svg = document.getElementById("stage"), form = document.getElementById("form");
+var ils = function (n) { return "₪" + n.toLocaleString("he-IL"); };
+document.getElementById("logo").src = SITE.logo; document.getElementById("brand-sub").textContent = SITE.sub;
+document.getElementById("phone").textContent = SITE.phone; document.getElementById("phone").href = "tel:" + SITE.phone.replace(/-/g, "");
+document.getElementById("fab").href = "https://wa.me/" + SITE.whatsapp;
+document.getElementById("title").textContent = P.name;
+document.getElementById("sub").textContent = F.sub;
+document.title = P.name + " · " + SITE.brand + " · " + SITE.sub;
+
+form.innerHTML = F.f.map(function (f) {
+  var v = defaults[f.k] == null ? "" : defaults[f.k], idd = "f-" + f.k;
+  var ctl = f.type === "range" ? '<input type="range" id="' + idd + '" name="' + f.k + '" min="' + f.min + '" max="' + f.max + '" step="' + f.step + '" value="' + v + '">'
+    : f.type === "select" ? '<select id="' + idd + '" name="' + f.k + '">' + f.o.map(function (o) { return '<option value="' + o[0] + '"' + (String(o[0]) === String(v) ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select>"
+    : f.type === "textarea" ? '<textarea id="' + idd + '" name="' + f.k + '" maxlength="60" placeholder="' + (f.ph || "") + '"></textarea>'
+    : '<input type="' + f.type + '" id="' + idd + '" name="' + f.k + '" placeholder="' + (f.ph || "") + '"' + (f.type === "tel" ? ' inputmode="tel" class="num"' : "") + ">";
+  var out = f.type === "range" ? '<output for="' + idd + '" class="num">' + v + (f.unit ? " " + f.unit : "") + "</output>" : "";
+  return '<div class="field" data-k="' + f.k + '"><label for="' + idd + '"><span>' + f.l + "</span>" + out + "</label>" + ctl + '<p class="err"></p></div>';
+}).join("");
+
+var cta = document.getElementById("cta"), ctaPrice = document.getElementById("cta-price"), ctaHint = document.getElementById("cta-hint"), note = document.getElementById("note");
+var current = null, previewDone = false, built = false;
+
+function values() {
+  var v = {}; F.f.forEach(function (f) {
+    var e = form.elements[f.k]; v[f.k] = f.type === "range" ? +e.value : e.value;
+    if (f.type === "select" && /^\d+$/.test(e.value)) v[f.k] = +e.value;
+    if (f.type === "range") e.closest(".field").querySelector("output").textContent = e.value + (f.unit ? " " + f.unit : "");
+  }); return v;
+}
+function update() {
+  var v = values(), qty = v.qty || 1; delete v.qty;
+  if (F.quote) { cta.disabled = !(v.model && v.cname && v.phone); return; }
+  var info = Preview.render(svg, id, v);
+  if (!built) { Motion.build(svg); Motion.tilt(svg, 10); built = true; }
+  note.textContent = info.msg ? info.msg + " · הדמיה במידות אמיתיות" : "הדמיה להמחשה, במידות אמיתיות";
+  var tf = form.querySelector('[data-k="text"]');
+  if (tf) { tf.classList.toggle("bad", !info.ok); tf.classList.toggle("ok", info.ok && !!v.text); tf.querySelector(".err").textContent = info.ok ? "" : info.msg; }
+  if (info.engrave_ratio != null) v.engrave_ratio = info.engrave_ratio;
+  var q;
+  try { q = Pricing.quote(id, v); } catch (e) { cta.disabled = true; ctaHint.textContent = "ערך מחוץ לטווח"; return; }
+  current = { q: q, qty: qty };
+  ctaPrice.textContent = ils(q.price_inc_vat * qty);
+  ctaHint.innerHTML = (q.estimate ? '<span class="tag">משוער</span> ' : "") + "כולל מע״מ" + (q.vat_inc ? "" : " · לפני מע״מ " + ils(q.price_ex_vat * qty)) + (qty > 1 ? " · " + qty + " יחידות" : "") + (q.shipping.delivery_ils == null ? " · משלוח לפי הצעה" : "");
+  cta.disabled = !info.ok;
+  if (info.ok && !previewDone) { previewDone = true; track("preview_complete", { product: id }); }
+}
+form.addEventListener("input", update);
+cta.addEventListener("click", function () {
+  if (F.quote) { submitQuote(); return; }
+  Order.open(current.q, current.qty, svg.outerHTML);
+});
+function submitQuote() {
+  var v = values(), msg = ["בקשת הצעה: מגן רוח", "דגם: " + v.model, "גובה: " + v.height, v.cname + ", " + v.phone].join("\n");
+  try { var all = JSON.parse(localStorage.getItem("plx_quotes") || "[]"); all.push(Object.assign({ created: new Date().toISOString() }, v)); localStorage.setItem("plx_quotes", JSON.stringify(all)); } catch (e) {}
+  track("order_submit", { product: id, provider: "quote" });
+  if (SITE.whatsapp) location.href = "https://wa.me/" + SITE.whatsapp + "?text=" + encodeURIComponent(msg);
+  else { alert("תודה. הוואטסאפ עוד לא מחובר, נחזור אליכם לפי הטלפון שהשארתם.\n\n" + msg); }
+}
+if (F.quote) { svg.style.display = "none"; note.textContent = ""; document.querySelector(".stage").style.display = "none"; document.getElementById("cta-label").textContent = "בקשת הצעת מחיר"; }
+track("page_view"); track("designer_open", { product: id });
+document.fonts ? document.fonts.ready.then(update) : update();
+update();
+</script>
+</body>
+</html>
