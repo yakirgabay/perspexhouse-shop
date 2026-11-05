@@ -94,17 +94,20 @@ var Preview = (function () {
   };
 
   // Square vase, front elevation with the open top.
+  // Vase: a square box with an open top (priced as a square box in calc/pricing.js), drawn oblique like the candy dispenser.
   R.vase = function (svg, i) {
-    var W = i.w * 10, H = i.h * 10, t = i.t, ry = W * 0.16;
-    var fs = frame(svg, W, H + ry);
-    var g = el("g", { transform: "translate(0 " + ry + ")" }, svg);
-    shape("rect", { x: 0, y: 0, width: W, height: H }, g);
-    shape("rect", { x: t, y: 0, width: W - 2 * t, height: H - t, fill: "rgba(28,179,207,0.06)", opacity: .9 }, g);
-    shape("ellipse", { cx: W / 2, cy: 0, rx: W / 2, ry: ry, fill: "rgba(255,255,255,0.6)" }, g);
+    var W = i.w * 10, H = i.h * 10, t = i.t, ox = W * 0.38, oy = -W * 0.38;
+    var fs = frame(svg, W + ox, H - oy);
+    var g = el("g", { transform: "translate(0 " + (-oy) + ")" }, svg);
+    shape("polygon", { points: pts([[W, 0], [W + ox, oy], [W + ox, H + oy], [W, H]]) }, g);           // right side
+    shape("polygon", { points: pts([[0, 0], [ox, oy], [W + ox, oy], [W, 0]]), fill: "rgba(255,255,255,0.7)" }, g); // open top
+    shape("polygon", { points: pts([[t, -t * 0.4], [ox + t * 0.6, oy + t * 0.4], [W + ox - t, oy + t * 0.4], [W - t * 0.6, -t * 0.4]]), fill: "rgba(28,179,207,0.06)" }, g); // wall thickness
+    shape("rect", { x: 0, y: 0, width: W, height: H }, g);                                             // front face
     highlight(g, W * 0.08, H * 0.12, W * 0.08, H * 0.85);
     dim(g, 0, H + fs * 1.2, W, H + fs * 1.2, cm(i.w), fs);
     dim(g, -fs * 1.2, 0, -fs * 1.2, H, cm(i.h), fs);
-    return { ok: true, msg: "תפרים אטומים למים" };
+    dim(g, W + fs * 0.8, H + fs * 0.9, W + ox + fs * 0.8, H + oy + fs * 0.9, cm(i.w), fs);
+    return { ok: true, msg: "מרובע · תפרים אטומים למים" };
   };
 
   // Judaica sign: engraved Hebrew text, fitted to the plate. Returns the real engraved area + letter height.

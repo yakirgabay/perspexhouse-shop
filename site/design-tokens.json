@@ -1,6 +1,6 @@
 {
   "$schema": "design tokens for בית הפרספקס · הזמנה אונליין. Source: docs/brand-brief-HE.md. No colors beyond this file.",
-  "brand": { "name": "בית הפרספקס", "sub": "הזמנה אונליין", "title": "בית הפרספקס · הזמנה אונליין", "logo": "assets/logo-perspexhouse.png", "logo_height_mobile_px": 40 },
+  "brand": { "name": "בית הפרספקס", "sub": "הזמנה אונליין", "title": "בית הפרספקס · הזמנה אונליין", "logo": "assets/logo-perspexhouse.png", "logo_height_mobile_px": 40, "logo_height_desktop_px": 48, "logo_surface": "ink (black bar, like perspexhouse.co.il; the PNG is transparent)" },
   "color": {
     "bg": "#ffffff",
     "bg2": "#f7f7f7",
@@ -13,6 +13,10 @@
     "success": "#086862",
     "whatsapp": "#25d366",
     "on_primary": "#ffffff",
+    "ink": "#000000",
+    "on_ink": "#ffffff",
+    "on_ink_muted": "#d1d1d1",
+    "ink_heading": "#1cb3cf",
     "glass_fill": "rgba(28,179,207,0.14)",
     "glass_stroke": "#1cb3cf"
   },
@@ -46,10 +50,10 @@
   },
   "preview": { "sheet_fill": "rgba(28,179,207,0.06)", "sheet_stroke": "#d1d1d1", "cut_stroke": "#1cb3cf", "engrave_stroke": "#08485d", "duplicate_stroke": "#f26554", "dimension_text": "#626262" },
   "motion": {
-    "build_ms": 600, "fill_ms": 400, "tilt_deg": 10, "easing": "cubic-bezier(.16,1,.3,1)",
+    "build_ms": 600, "fill_ms": 400, "easing": "cubic-bezier(.16,1,.3,1)",
     "reduced_motion": "everything appears immediately",
-    "allowed": ["parametric build (stroke-dashoffset)", "fill (CSS opacity)", "tilt 10deg on drag/hover"],
-    "forbidden": ["3D", "rotation", "particles", "per-product animation"]
+    "allowed": ["parametric build (clip-path wipe, right to left)", "fill (CSS fill-opacity)"],
+    "forbidden": ["3D", "rotation (the hover/drag tilt was removed 5.11: the drawing left its frame)", "particles", "per-product animation"]
   },
   "price": { "currency_prefix": "₪", "vat_display": "inclusive", "business_note": "לפני מע״מ ₪{ex}", "estimate_until": "rates.status === 'confirmed'" }
 }

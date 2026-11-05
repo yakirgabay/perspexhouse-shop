@@ -9,8 +9,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="motion.css">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <style>
-.drop{display:block;margin-block:12px;border:2px dashed var(--line);border-radius:var(--r);padding:26px 16px;text-align:center;background:var(--card);cursor:pointer;transition:border-color .3s var(--ease)}
+.drop{display:block;margin-block:12px;border:2px dashed var(--line);border-radius:var(--r);padding:26px 16px;text-align:center;background:var(--bg);cursor:pointer;transition:border-color .3s var(--ease)}
 .drop:hover,.drop.over{border-color:var(--accent)}
 .drop input{display:none}
 .drop b{display:block;font-size:1.05rem}
@@ -65,6 +67,7 @@
     </div>
   </div>
 </main>
+<footer class="foot" id="foot"></footer>
 
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="o-title">
   <form class="panel" onsubmit="Order.submit(event)">
@@ -77,6 +80,7 @@
     <div class="field"><label for="o-phone">טלפון</label><input id="o-phone" name="phone" type="tel" inputmode="tel" class="num" required pattern="0[2-9][0-9]{7,8}" title="מספר ישראלי, 9 או 10 ספרות"></div>
     <div class="field"><label for="o-city">עיר</label><input id="o-city" name="city" type="text" required></div>
     <label class="check"><input type="checkbox" name="confirm" required><span>הקובץ סופי והטקסט מומר לקווי מתאר. מאיר בודק את הקובץ לפני החיתוך. את הקובץ עצמו מצרפים בוואטסאפ.</span></label>
+    <p class="hint">מוצר בהתאמה אישית מיוצר במיוחד עבורכם. אין ביטול אחרי אישור ההדמיה.</p>
     <div class="actions">
       <button class="btn" type="submit">שליחת ההזמנה בוואטסאפ</button>
       <button class="btn ghost" type="button" onclick="Order.close()">חזרה</button>
@@ -103,6 +107,7 @@
 <script src="track.js"></script>
 <script src="motion.js"></script>
 <script src="order.js"></script>
+<script src="footer.js"></script>
 <script>
 var ils = function (n) { return "₪" + n.toLocaleString("he-IL"); };
 document.getElementById("logo").src = SITE.logo; document.getElementById("brand-sub").textContent = SITE.sub;
@@ -113,7 +118,6 @@ document.title = "חיתוך לפי קובץ · " + SITE.brand + " · " + SITE.s
 var svg = document.getElementById("stage"), report = document.getElementById("report"), form = document.getElementById("form");
 var cta = document.getElementById("cta"), ctaPrice = document.getElementById("cta-price"), ctaHint = document.getElementById("cta-hint");
 var fileText = null, fileName = "", parsed = null, current = null, previewDone = false, unitsField = document.getElementById("units-field"), fresh = false;
-Motion.tilt(svg, 10);
 form.addEventListener("click", function (ev) { // +/- on quantity
   var b = ev.target.closest("button[data-d]"); if (!b) return;
   var n = b.parentNode.querySelector("input"), v = Math.min(+n.max, Math.max(+n.min, (+n.value || 1) + +b.dataset.d));
@@ -135,12 +139,12 @@ function draw(res) {
   res.paths.forEach(function (p) {
     var el = document.createElementNS(NS, p.closed ? "polygon" : "polyline");
     el.setAttribute("points", p.pts.map(function (q) { return q[0] + "," + q[1]; }).join(" "));
-    el.setAttribute("fill", "none"); el.setAttribute("stroke", p.dup || (!p.closed && !p.engrave) ? "#f26554" : p.engrave ? "#08485d" : "#1cb3cf"); // red = duplicate or open path el.setAttribute("class", "cut");
+    el.setAttribute("fill", "none"); el.setAttribute("stroke", p.dup || (!p.closed && !p.engrave) ? "#f26554" : p.engrave ? "#08485d" : "#1cb3cf"); el.setAttribute("class", "cut"); // red = duplicate or open path
     el.setAttribute("stroke-width", 1.5); el.setAttribute("vector-effect", "non-scaling-stroke");
     svg.appendChild(el);
   });
   var t = document.createElementNS(NS, "text"); t.setAttribute("x", ox + w / 2); t.setAttribute("y", oy + h + pad * 0.7);
-  t.setAttribute("class", "dim"); t.setAttribute("text-anchor", "middle"); t.setAttribute("font-size", Math.max(w, h) * 0.06 + 3);
+  t.setAttribute("class", "dim"); t.setAttribute("text-anchor", "middle"); t.setAttribute("font-size", (Math.max(w, h) + 2 * pad) * 0.035); // ~3.5% of the view: readable on a phone, not huge at 1440
   t.textContent = res.bbox_cm.w + " × " + res.bbox_cm.h + " ס״מ"; svg.appendChild(t);
   if (fresh) { Motion.build(svg); fresh = false; } // build once per file, not on every quantity tick
 }

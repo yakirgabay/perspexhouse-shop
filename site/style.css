@@ -2,6 +2,7 @@
 :root{
   --bg:#ffffff; --bg2:#f7f7f7; --fg:#313131; --muted:#626262; --line:#d1d1d1;
   --primary:#1cb3cf; --primary-dark:#08485d; --accent:#f26554; --success:#086862; --wa:#25d366; --on-primary:#ffffff;
+  --ink:#000000; --on-ink:#ffffff; --on-ink-muted:#d1d1d1; /* Meir's black bar + footer (round 3) */
   --glass:rgba(28,179,207,.14);
   --font:'Assistant',system-ui,sans-serif;
   --r:14px; --rb:10px; --ease:cubic-bezier(.16,1,.3,1);
@@ -19,12 +20,14 @@ a{color:inherit;text-decoration:none}
 .display{font-weight:800;line-height:1.1;letter-spacing:-.01em}
 
 /* top bar */
-.bar{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--line)}
+/* black bar like perspexhouse.co.il: the transparent logo reads stronger on black (round 3, Yakir 5.11) */
+.bar{position:sticky;top:0;z-index:40;background:var(--ink)}
 .bar .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:12px}
 .logo{display:flex;align-items:center;gap:10px;min-height:44px}
 .logo img{height:40px;width:auto;display:block}
-.logo span{font-weight:700;font-size:.95rem;color:var(--primary-dark);border-inline-start:1px solid var(--line);padding-inline-start:10px}
-.phone{font-size:.9rem;color:var(--muted);min-height:44px;display:inline-flex;align-items:center;padding-inline:4px} /* 44px targets without a bigger drawing (audit A9) */
+.logo span{font-weight:600;font-size:.95rem;color:var(--on-ink-muted);border-inline-start:1px solid rgba(255,255,255,.25);padding-inline-start:10px}
+@media(min-width:720px){.logo img{height:48px}}
+.phone{font-size:.9rem;color:var(--on-ink);min-height:44px;display:inline-flex;align-items:center;padding-inline:4px} /* 44px targets without a bigger drawing (audit A9) */
 
 /* floating whatsapp (bottom-left: the right side stays free for the primary button) */
 .fab{position:fixed;inset-inline-end:auto;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:50;width:56px;height:56px;border-radius:50%;background:var(--wa);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.2)}
@@ -72,27 +75,53 @@ h2{font-size:clamp(1.4rem,4.5vw,2rem);margin-block:4px 16px}
 @media(min-width:760px){.cards{grid-template-columns:repeat(3,1fr)}}
 .card{border:1px solid var(--line);border-radius:var(--r);background:var(--bg);overflow:hidden;transition:border-color .25s var(--ease)}
 .card:hover{border-color:var(--primary)}
-.card svg{width:100%;aspect-ratio:4/3;display:block;background:var(--bg2)}
+/* card media: 16:10 on white for every card. The studio loops are 16:10 on white; 4:3 would crop their dimensions and "הדמיה להמחשה" */
+.card svg,.card video{width:100%;aspect-ratio:16/10;display:block;background:var(--bg);object-fit:contain;border-bottom:1px solid var(--line)}
 .card .body{padding:12px 14px 14px}
 .card h3{font-size:1rem;font-weight:800}
+.card .desc{font-size:.85rem;color:var(--muted);line-height:1.4;margin-block-start:2px}
+.card img.real-card{width:100%;aspect-ratio:16/10;display:block;object-fit:cover;border-bottom:1px solid var(--line)}
 .card .meta{display:flex;justify-content:space-between;align-items:baseline;margin-block-start:6px;font-size:.9rem;color:var(--muted)}
 .card .meta b{color:var(--primary-dark);font-weight:800}
 .card.hero-card{grid-column:1/-1}
-@media(min-width:760px){.card.hero-card{grid-column:span 1}}
+@media(min-width:760px){.card.hero-card{grid-column:span 1}
+  /* 7 cards in 3 columns left the file card alone: on desktop it becomes a full-width strip */
+  .card[data-id=cutfile]{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) 2fr;align-items:center}
+  .card[data-id=cutfile] svg,.card[data-id=cutfile] img{border-bottom:0;border-inline-end:1px solid var(--line)}}
 .steps{display:grid;gap:12px;grid-template-columns:1fr}
 @media(min-width:640px){.steps{grid-template-columns:repeat(3,1fr)}}
 .step{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:var(--bg2)}
 .step .n{font-weight:800;color:var(--primary-dark);font-size:1.3rem} /* #1cb3cf on #f7f7f7 was 2.3:1 (audit A13) */
 .step h3{font-size:1rem;margin-block:2px 4px;font-weight:800}
 .step p{font-size:.92rem;color:var(--muted)}
-.trust{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:.9rem;color:var(--muted)}
-footer{border-top:1px solid var(--line);padding-block:22px 100px;font-size:.8rem;color:var(--muted)}
+/* "how to order" as a dark band (primary-dark, the closest token to Meir's slate band). Solid colors only: no translucent fills */
+.steps-band{background:var(--primary-dark);color:var(--on-primary);border-top:0}
+.steps-band .eyebrow{color:var(--on-ink-muted)}
+.steps-band .step{background:var(--primary-dark);border-color:rgba(255,255,255,.28)}
+.steps-band .step .n{color:var(--primary)} /* large bold only: 3.6:1 on primary-dark */
+.steps-band .step p{color:var(--on-ink-muted)}
+/* trust row right under the hero: a bold fact + one line, 2 columns on phones, 4 on desktop */
+.trust-band{padding-block:20px}
+.trust{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}
+@media(min-width:760px){.trust{grid-template-columns:repeat(4,1fr)}}
+.trust b{display:block;font-weight:800;color:var(--fg)}
+.trust span{font-size:.88rem;color:var(--muted)}
+/* footer: black like Meir's, turquoise headings (8.4:1), one shared file (site/footer.js) */
+.foot{background:var(--ink);color:var(--on-ink-muted);padding-block:32px 24px;font-size:.9rem}
+.foot h2{font-size:1rem;color:var(--primary);margin-block:0 8px}
+.foot-grid{display:grid;gap:22px;grid-template-columns:1fr}
+@media(min-width:720px){.foot-grid{grid-template-columns:2fr 1fr 1fr}}
+.foot ul{list-style:none;display:grid;gap:2px}
+.foot a{color:var(--on-ink);text-decoration:underline;text-underline-offset:3px;display:inline-flex;align-items:center;gap:6px;min-height:44px}
+.foot-legal{border-top:1px solid rgba(255,255,255,.18);margin-block-start:20px;padding-block-start:14px;font-size:.8rem;display:grid;gap:4px}
+.foot-legal a{min-height:0}
+@media(max-width:719px){.foot{padding-bottom:calc(96px + env(safe-area-inset-bottom))}} /* clear the floating WhatsApp / the order bar on phones */
 
 /* designer */
 /* order on phones: what it is (head) -> the drawing (stage, sticky) -> the fields (audit B4) */
 .designer{display:grid;grid-template-columns:1fr;grid-template-areas:"head" "stage" "fields";min-height:calc(100vh - 60px)}
 .dhead{grid-area:head;padding:14px 16px 10px}
-.dhead h1{font-size:1.5rem;font-weight:800;margin-block-end:2px}
+.dhead h1{font-size:clamp(1.5rem,2.4vw,2rem);font-weight:800;margin-block-end:2px}
 .dhead .sub{font-size:.95rem;color:var(--muted)}
 .dhead .crumb{font-size:.82rem;color:var(--muted);margin-block-end:4px;display:inline-block;min-height:44px;line-height:44px}
 .dhead .crumb::before{content:"‹ ";color:var(--primary-dark)}
@@ -127,6 +156,12 @@ footer{border-top:1px solid var(--line);padding-block:22px 100px;font-size:.8rem
 .field.bad select,.field.bad textarea,.field.bad input{border-color:var(--accent)}
 .field.ok label::after{content:"✓";color:var(--success);font-weight:800}
 .hint{font-size:.82rem;color:var(--muted);margin-block-start:6px}
+/* "in reality": the finished product at the end of the fields, before the order button (round 3, option B) */
+.real{margin-block:18px 8px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--bg)}
+.real h2{font-size:1rem;font-weight:800;padding:12px 14px 8px;margin:0}
+.real img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.real figcaption{font-size:.8rem;color:var(--muted);padding:8px 14px 12px}
+.stage .real.in-stage{margin:12px;flex:1 1 auto}
 .sticky-cta{position:fixed;inset-inline:0;bottom:0;z-index:45;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line)}
 .sticky-cta .btn{width:100%;font-size:1.05rem;justify-content:space-between}
 .sticky-cta .price{color:var(--on-primary);font-size:1.15rem}
@@ -138,7 +173,9 @@ footer{border-top:1px solid var(--line);padding-block:22px 100px;font-size:.8rem
   /* order button pinned to the bottom of the fields column: visible without scrolling at 1280x800 */
   .sticky-cta{position:sticky;inset:auto;bottom:0;padding:12px 0 calc(12px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line);margin-block-start:8px}
   .fields{padding-bottom:0}
+  .designer.quote{grid-template-columns:minmax(0,680px);justify-content:center;grid-template-areas:"head" "fields"} /* windshield without a photo: no empty half */
 }
+.designer.quote{grid-template-areas:"head" "fields"}
 
 /* order sheet */
 .sheet{position:fixed;inset:0;z-index:60;background:rgba(49,49,49,.55);display:none;align-items:flex-end;justify-content:center}

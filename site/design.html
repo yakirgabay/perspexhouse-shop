@@ -9,6 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="motion.css">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 </head>
 <body class="has-cta">
 <a class="skip" href="#main">דילוג לתוכן</a>
@@ -41,6 +43,7 @@
     </div>
   </div>
 </main>
+<footer class="foot" id="foot"></footer>
 
 <!-- order sheet -->
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="o-title">
@@ -54,6 +57,7 @@
     <div class="field"><label for="o-phone">טלפון</label><input id="o-phone" name="phone" type="tel" inputmode="tel" class="num" required pattern="0[2-9][0-9]{7,8}" title="מספר ישראלי, 9 או 10 ספרות"></div>
     <div class="field"><label for="o-city">עיר</label><input id="o-city" name="city" type="text" required></div>
     <label class="check"><input type="checkbox" name="confirm" required><span>בדקתי את המידות ואת האיות. לפני החיתוך אקבל הדמיה לאישור.</span></label>
+    <p class="hint">מוצר בהתאמה אישית מיוצר במיוחד עבורכם. אין ביטול אחרי אישור ההדמיה.</p>
     <div class="actions">
       <button class="btn" type="submit" id="o-submit">שליחת ההזמנה בוואטסאפ</button>
       <button class="btn ghost" type="button" onclick="Order.close()">חזרה לעיצוב</button>
@@ -80,6 +84,7 @@
 <script src="preview.js"></script>
 <script src="motion.js"></script>
 <script src="order.js"></script>
+<script src="footer.js"></script>
 <script>
 // Field definitions per product. Bounds mirror calc/pricing.js; the engine still rejects anything outside them.
 var MAT = [["clear", "שקוף"], ["smoked", "מעושן"], ["frosted", "חלבי"], ["colored", "צבעוני"]];
@@ -114,7 +119,7 @@ var FIELDS = {
     { k: "t", l: "עובי", type: "select", o: T([5, 8]) },
     { k: "material", l: "חומר", type: "select", o: MAT },
     { k: "qty", l: "כמות", type: "qty", min: 1, max: 20 }] },
-  judaica_sign: { sub: "שם, ברכה או פסוק, חרוטים בעברית. כתבו ותראו את זה על השלט. החריטה בפונט Assistant, כמו בהדמיה.", f: [
+  judaica_sign: { sub: "שם, ברכה או פסוק, חרוטים בעברית. כתבו ותראו את זה על השלט. החריטה באותו פונט שאתם רואים בהדמיה.", f: [
     { k: "text", l: "הטקסט", type: "textarea", ph: "למשל: משפחת כהן" },
     { k: "w", l: "רוחב", type: "range", min: 10, max: 120, step: 1, unit: "ס״מ" },
     { k: "h", l: "גובה", type: "range", min: 10, max: 90, step: 1, unit: "ס״מ" },
@@ -190,7 +195,7 @@ function update() {
   if (F.quote) { cta.disabled = !(v.model && v.cname && v.phone); return; }
   var he = labelled(v);
   var info = Preview.render(svg, id, v);
-  if (!built) { Motion.build(svg); Motion.tilt(svg, 10); built = true; }
+  if (!built) { Motion.build(svg); built = true; }
   note.textContent = info.msg ? info.msg + " · הדמיה במידות אמיתיות" : "הדמיה להמחשה, במידות אמיתיות";
   var tf = form.querySelector('[data-k="text"]');
   if (tf) { tf.classList.toggle("bad", !info.ok); tf.classList.toggle("ok", info.ok && !!v.text); tf.querySelector(".err").textContent = info.ok ? "" : info.msg; }
@@ -202,7 +207,9 @@ function update() {
   ctaPrice.textContent = ils(q.price_inc_vat * qty);
   document.getElementById("price-live").textContent = "מחיר " + ils(q.price_inc_vat * qty) + " כולל מע״מ"; // screen readers hear the price move (audit A3)
   ctaHint.innerHTML = "כולל מע״מ" + (q.vat_inc ? "" : " · לפני מע״מ " + ils(q.price_ex_vat * qty)) + (qty > 1 ? " · " + qty + " יחידות" : "") + (q.shipping.delivery_ils == null ? " · משלוח לפי הצעה" : "") + (q.estimate ? ' <span class="tag">משוער</span>' : ""); // the one place the tag appears (critique P2)
-  cta.disabled = !info.ok;
+  var noText = "text" in v && !String(v.text).trim(); // a Judaica sign with no text is not a product
+  if (noText) ctaHint.textContent = "כתבו את הטקסט לשלט";
+  cta.disabled = !info.ok || noText;
   if (info.ok && !previewDone) { previewDone = true; track("preview_complete", { product: id }); }
 }
 form.addEventListener("input", sync);
@@ -217,7 +224,21 @@ function submitQuote() {
   if (SITE.whatsapp) window.open("https://wa.me/" + SITE.whatsapp + "?text=" + encodeURIComponent(msg), "_blank", "noopener");
   else { alert("תודה. הוואטסאפ עוד לא מחובר, נחזור אליכם לפי הטלפון שהשארתם.\n\n" + msg); }
 }
-if (F.quote) { svg.style.display = "none"; note.textContent = ""; document.querySelector(".stage").style.display = "none"; document.getElementById("cta-label").textContent = "בקשת הצעת מחיר"; }
+// "In reality": the finished product in a real place, at the end of the fields, right above the order button (round 3, option B).
+// Shown only for an approved photo (SITE.real). No dimensions on it: the drawing above carries the customer's sizes.
+var REAL = (SITE.real || {})[id];
+function realFigure(r, cls) {
+  var meir = r.by === "meir";
+  return '<figure class="real ' + (cls || "") + '"><h2>' + (meir ? "ככה זה נראה אצל לקוח" : "ככה זה ייראה במקום") + '</h2>' +
+    '<img data-real src="' + r.panel + '" alt="' + r.alt + '" loading="lazy">' +
+    '<figcaption>' + (meir ? "עבודה של בית הפרספקס" : "הדמיה להמחשה") + ' · המידות שלכם בשרטוט</figcaption></figure>';
+}
+if (REAL && !F.quote) form.insertAdjacentHTML("afterend", realFigure(REAL));
+if (F.quote) {
+  document.getElementById("cta-label").textContent = "בקשת הצעת מחיר";
+  if (REAL) { svg.style.display = "none"; note.textContent = ""; document.querySelector(".stage").insertAdjacentHTML("afterbegin", realFigure(REAL, "in-stage")); }
+  else { document.querySelector(".stage").style.display = "none"; document.querySelector(".designer").classList.add("quote"); } // no empty half-screen
+}
 track("page_view"); track("designer_open", { product: id });
 document.fonts ? document.fonts.ready.then(update) : update();
 update();

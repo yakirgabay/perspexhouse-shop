@@ -19,16 +19,12 @@ p{color:var(--muted);font-size:.95rem}
 </head>
 <body>
 <main>
-<h1>שלושת האפקטים, בקוד</h1>
+<h1>שני האפקטים, בקוד</h1>
 <p>למסירה לפרויקט ולסטודיו. אותו SVG, אותם tokens. בלי תלת ממד, בלי חלקיקים.</p>
 
 <div class="demo">
   <svg id="s1" xmlns="http://www.w3.org/2000/svg"></svg>
   <div class="row"><h2>1 + 2 · בנייה פרמטרית והתמלאות</h2><button class="btn" id="b1" type="button">הפעל שוב</button></div>
-</div>
-<div class="demo">
-  <svg id="s2" xmlns="http://www.w3.org/2000/svg"></svg>
-  <div class="row"><h2>3 · הטיה 10°</h2><span class="muted">גררו או העבירו עכבר</span></div>
 </div>
 <div class="demo">
   <svg id="s3" xmlns="http://www.w3.org/2000/svg"></svg>
@@ -41,11 +37,10 @@ p{color:var(--muted);font-size:.95rem}
 <script src="motion.js"></script>
 <script>
 var d = Pricing.PRODUCTS.candy_dispenser.defaults;
-var s1 = document.getElementById("s1"), s2 = document.getElementById("s2"), s3 = document.getElementById("s3");
+var s1 = document.getElementById("s1"), s3 = document.getElementById("s3");
 Preview.render(s1, "candy_dispenser", d); Motion.build(s1);
 document.getElementById("b1").onclick = function () { Motion.build(s1); };
-Preview.render(s2, "judaica_sign", Object.assign({}, Pricing.PRODUCTS.judaica_sign.defaults, { text: "משפחת כהן" })); Motion.tilt(s2, 10);
-var r3 = document.getElementById("r3"); Preview.render(s3, "candy_dispenser", d); Motion.build(s3); Motion.tilt(s3, 10);
+var r3 = document.getElementById("r3"); Preview.render(s3, "candy_dispenser", d); Motion.build(s3);
 r3.oninput = function () { Preview.render(s3, "candy_dispenser", Object.assign({}, d, { cells: +r3.value })); Motion.build(s3); };
 </script>
 </body>

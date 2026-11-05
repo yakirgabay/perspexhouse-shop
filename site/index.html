@@ -10,6 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="motion.css">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 </head>
 <body>
 <a class="skip" href="#main">דילוג לתוכן</a>
@@ -21,7 +23,7 @@
 
 <main id="main">
 <header class="hero"><div class="wrap">
-  <div class="kicker">מפעל באשקלון מ‑2007 · חיתוך מדויק לפי מידה</div>
+  <div class="kicker">מפעל פרספקס באשקלון מ‑2007 · חיתוך מדויק לפי מידה</div>
   <h1 class="display" id="h1"></h1>
   <p id="h1sub"></p>
   <div class="live" id="live">
@@ -30,32 +32,34 @@
   </div>
 </div></header>
 
+<!-- trust right under the hero (it was the least visible thing on the page). Facts from perspexhouse.co.il -->
+<section class="trust-band"><div class="wrap">
+  <ul class="trust" id="trust">
+    <li><b>מ‑2007 באשקלון</b><span>ו‑18 שנה לפני כן בהולנד</span></li>
+    <li><b>עבודה פדנטית</b><span>חיתוך מדויק וקצוות נקיים</span></li>
+    <li><b>הדמיה לפני חיתוך</b><span>מאיר מאשר כל הזמנה איתכם</span></li>
+    <li><b>גם יחידה אחת</b><span>ועד סדרה לעסק</span></li>
+  </ul>
+</div></section>
+
 <section id="products"><div class="wrap">
-  <div class="eyebrow">מה מזמינים</div>
-  <h2 class="display">בוחרים. רואים. מזמינים.</h2>
+  <div class="eyebrow">מוצרים בהזמנה אישית</div>
+  <h2 class="display">כל מוצר נחתך לפי המידות שלכם.</h2>
   <div class="cards" id="cards"></div>
 </div></section>
 
-<section><div class="wrap">
-  <div class="eyebrow">איך זה עובד</div>
-  <h2 class="display">שלושה צעדים.</h2>
+<section class="steps-band"><div class="wrap">
+  <div class="eyebrow">איך מזמינים</div>
+  <h2 class="display">מהמידות שלכם, ישר למפעל.</h2>
   <div class="steps">
-    <div class="step"><div class="n">1</div><h3>בוחרים מידות</h3><p>מידות, עובי, חומר. ההדמיה מתעדכנת תוך כדי.</p></div>
-    <div class="step"><div class="n">2</div><h3>רואים מחיר</h3><p>המחיר מחושב מהמידות שבחרתם. כולל מע״מ.</p></div>
-    <div class="step"><div class="n">3</div><h3>מזמינים בוואטסאפ</h3><p>שולחים את ההזמנה. מאיר מאשר מחיר ושולח הדמיה לאישור, ואז מייצרים.</p></div>
-  </div>
-</div></section>
-
-<section><div class="wrap">
-  <div class="trust" id="trust">
-    <span>חיתוך מדויק, קצוות נקיים</span>
-    <span>כל פריט נבדק לפני המשלוח</span>
-    <span>גם יחידה אחת</span>
+    <div class="step"><div class="n">1</div><h3>קובעים מידות</h3><p>מידות, עובי וחומר. השרטוט והמחיר מתעדכנים תוך כדי.</p></div>
+    <div class="step"><div class="n">2</div><h3>שולחים בוואטסאפ</h3><p>ההזמנה מגיעה ישר למאיר. בלי תשלום בשלב הזה.</p></div>
+    <div class="step"><div class="n">3</div><h3>מאשרים, ואז חותכים</h3><p>מאיר שולח הדמיה ומחיר סופי. חותכים רק אחרי האישור שלכם.</p></div>
   </div>
 </div></section>
 
 </main>
-<footer><div class="wrap"><span id="foot"></span></div></footer>
+<footer class="foot" id="foot"></footer>
 
 <script src="../calc/rates.js"></script>
 <script src="../calc/pricing.js"></script>
@@ -63,19 +67,18 @@
 <script src="track.js"></script>
 <script src="preview.js"></script>
 <script src="motion.js"></script>
+<script src="footer.js"></script>
 <script>
 var ils = function (n) { return "₪" + n.toLocaleString("he-IL"); };
 document.getElementById("logo").src = SITE.logo; document.getElementById("brand-sub").textContent = SITE.sub;
 document.getElementById("phone").textContent = SITE.phone; document.getElementById("phone").href = "tel:" + SITE.phone.replace(/-/g, "");
 document.getElementById("fab").href = "https://wa.me/" + SITE.whatsapp;
-document.getElementById("foot").textContent = SITE.brand + " · " + SITE.address + " · " + SITE.phone + " · מחיר סופי והדמיה לאישור לפני כל חיוב";
 document.title = SITE.brand + " · " + SITE.sub;
-if (SITE.trust.factory_line) document.getElementById("trust").insertAdjacentHTML("afterbegin", "<span>מפעל באשקלון מ‑2007</span>");
-if (SITE.trust.lead_time) document.getElementById("trust").insertAdjacentHTML("beforeend", "<span>אספקה " + SITE.trust.lead_time + "</span>");
+if (SITE.trust.lead_time) document.getElementById("trust").insertAdjacentHTML("beforeend", "<li><b>אספקה " + SITE.trust.lead_time + "</b><span>מרגע האישור</span></li>");
 
 // --- hero: one live control on the hero product (SITE.hero). Copy: docs/copy-HE.md ---
 var HERO = {
-  candy_dispenser: { h1: "מתקן ממתקים לפיצוציה. במידות שלכם.", sub: "גררו את מספר התאים. המתקן והמחיר משתנים.", k: "cells", l: "תאים", min: 1, max: 8 },
+  candy_dispenser: { h1: "מתקן ממתקים לפיצוציה. בדיוק במידה של הדלפק.", sub: "גררו את מספר התאים ותראו את המחיר. מייצרים במפעל באשקלון.", k: "cells", l: "תאים", min: 1, max: 8 },
   judaica_sign: { h1: "השם שלכם, חרוט בפרספקס.", sub: "כתבו שם ותראו אותו על השלט, עם מחיר.", k: "text" },
   table_cover: { h1: "כיסוי שקוף למידות השולחן.", sub: "אורך, רוחב, חורים לכבלים. המחיר מהמידות.", k: "w", l: "אורך", min: 20, max: 300 },
   display_stand: { h1: "מתקן תצוגה במידות שלכם.", sub: "כמה מדרגות? המחיר מתעדכן.", k: "tiers", l: "מדרגות", min: 1, max: 5 },
@@ -86,7 +89,7 @@ document.getElementById("h1").textContent = H.h1; document.getElementById("h1sub
 var ctl = document.getElementById("hero-ctl");
 ctl.innerHTML = (H.k === "text"
   ? '<input type="text" id="hero-in" maxlength="40" placeholder="כתבו שם" aria-label="הטקסט על השלט" style="font:inherit;font-size:1.1rem;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:.6em .8em">'
-  : '<div class="row"><label for="hero-in">' + H.l + ' <output id="hero-out" class="num"></output></label></div><input type="range" id="hero-in" min="' + H.min + '" max="' + H.max + '" step="1" value="' + hp.defaults[H.k] + '">')
+  : '<div class="row"><label for="hero-in"><output id="hero-out" class="num"></output> ' + H.l + '</label></div><input type="range" id="hero-in" min="' + H.min + '" max="' + H.max + '" step="1" value="' + hp.defaults[H.k] + '">')
   + '<div class="row"><span class="price num" id="hero-price" aria-live="polite" aria-atomic="true"></span></div><a class="btn" id="hero-go">להמשיך לעיצוב</a><p class="hint" id="hero-hint"></p>';
 var hin = document.getElementById("hero-in"), first = true;
 function heroUpdate() {
@@ -100,27 +103,74 @@ function heroUpdate() {
   document.getElementById("hero-go").href = "design.html?p=" + hid;
 }
 hin.addEventListener("input", heroUpdate);
-Motion.tilt(hsvg, 10);
 document.getElementById("hero-go").addEventListener("click", function () { track("cta_click", { product: hid, where: "hero" }); });
 
 // --- product cards, each with its own default preview and starting price (inc VAT) ---
 var ORDER = ["candy_dispenser", "table_cover", "display_stand", "vase", "judaica_sign", "windshield"];
+// Studio loops (8 s, 16:10, white, "הדמיה להמחשה" burned in; lotan-motion-studio SYNC.md 3.11). The rest stay drawings.
+var LOOPS = { candy_dispenser: 1, table_cover: 1, display_stand: 1, judaica_sign: 1 };
+// One line per card (docs/copy-HE.md). REAL = approved "in reality" photos (SITE.real); a card without a loop shows its photo.
+var DESC = {
+  candy_dispenser: "תאים עם מכסים, לדלפק של פיצוציה או מכולת.",
+  table_cover: "שקוף, במידות השולחן. חורים לכבלים לפי הצורך.",
+  display_stand: "מדרגות שקופות לדלפק או לחלון ראווה.",
+  vase: "מרובע ואטום למים, בגובה שתבחרו.",
+  judaica_sign: "שם או ברכה, חרוטים בעברית. לדלת או לקיר.",
+  windshield: "לפי דגם האופנוע. הצעת מחיר תוך יום עסקים.",
+  cutfile: "מעלים קובץ SVG או DXF ומקבלים מחיר מיד."
+};
+var REAL = SITE.real || {};
+// "From" price = what the designer shows for a typical order. Judaica: the same sample name as the designer's placeholder,
+// so the card never says more than a real sign costs (formula unchanged, only the input; Yakir 5.11).
+function fromQuote(id) {
+  if (id !== "judaica_sign") return Pricing.quote(id);
+  var probe = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  var v = Object.assign({}, Pricing.PRODUCTS[id].defaults, { text: "משפחת כהן" }), info = Preview.render(probe, id, v);
+  if (info.engrave_ratio != null) v.engrave_ratio = info.engrave_ratio;
+  return Pricing.quote(id, v);
+}
 var cards = document.getElementById("cards");
 cards.innerHTML = ORDER.map(function (id) {
   var p = Pricing.PRODUCTS[id], meta;
   if (p.quote_only) meta = "<span>לפי דגם</span><b>הצעת מחיר</b>";
-  else { var q = Pricing.quote(id); meta = "<span>כולל מע״מ</span><b class='num'>מ‑" + ils(q.price_inc_vat) + "</b>"; }
-  return '<a class="card' + (id === hid ? " hero-card" : "") + '" href="design.html?p=' + id + '" data-id="' + id + '"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"></svg><div class="body"><h3>' + p.name + '</h3><div class="meta">' + meta + "</div></div></a>";
+  else { var q = fromQuote(id); meta = "<span>כולל מע״מ</span><b class='num'>מ‑" + ils(q.price_inc_vat) + "</b>"; }
+  var media = LOOPS[id]
+    ? '<video muted loop playsinline preload="none" poster="media/poster-' + id + '.jpg" aria-hidden="true"><source src="media/loop-' + id + '.mp4" type="video/mp4"></video>'
+    : REAL[id] ? '<img class="real-card" data-real src="' + REAL[id].card + '" alt="' + REAL[id].alt + '" loading="lazy">'
+    : '<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"></svg>';
+  return '<a class="card' + (id === hid ? " hero-card" : "") + '" href="design.html?p=' + id + '" data-id="' + id + '">' + media + '<div class="body"><h3>' + p.name + '</h3><p class="desc">' + DESC[id] + '</p><div class="meta">' + meta + "</div></div></a>";
 }).join("");
 var fileMin = Math.round(Pricing.RATES.channel.file.min_price_ex * (1 + Pricing.RATES.vat));
-cards.insertAdjacentHTML("beforeend", '<a class="card" href="cut.html" data-id="cutfile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-hidden="true" focusable="false"><rect x="70" y="50" width="260" height="200" rx="6" fill="rgba(28,179,207,.06)" stroke="#d1d1d1" stroke-width="2" stroke-dasharray="8 6"/><polygon points="120,100 280,100 280,200 200,200 200,150 120,150" fill="rgba(28,179,207,.14)" stroke="#1cb3cf" stroke-width="2"/><circle cx="250" cy="130" r="12" fill="#fff" stroke="#1cb3cf" stroke-width="2"/></svg><div class="body"><h3>יש לכם קובץ? חיתוך לפי קובץ</h3><div class="meta"><span>SVG או DXF</span><b class="num">מ‑' + ils(fileMin) + '</b></div></div></a>');
+cards.insertAdjacentHTML("beforeend", '<a class="card" href="cut.html" data-id="cutfile">' + (REAL.cutfile ? '<img class="real-card" data-real src="' + REAL.cutfile.card + '" alt="' + REAL.cutfile.alt + '" loading="lazy">' : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-hidden="true" focusable="false"><rect x="70" y="50" width="260" height="200" rx="6" fill="rgba(28,179,207,.06)" stroke="#d1d1d1" stroke-width="2" stroke-dasharray="8 6"/><polygon points="120,100 280,100 280,200 200,200 200,150 120,150" fill="rgba(28,179,207,.14)" stroke="#1cb3cf" stroke-width="2"/><circle cx="250" cy="130" r="12" fill="#fff" stroke="#1cb3cf" stroke-width="2"/></svg>') + '<div class="body"><h3>יש לכם קובץ? חיתוך לפי קובץ</h3><p class="desc">' + DESC.cutfile + '</p><div class="meta"><span>SVG או DXF</span><b class="num">מ‑' + ils(fileMin) + '</b></div></div></a>');
 ORDER.forEach(function (id) {
   var c = cards.querySelector('[data-id="' + id + '"]'), p = Pricing.PRODUCTS[id];
-  if (!p.quote_only) Preview.render(c.querySelector("svg"), id, Object.assign({}, p.defaults, id === "judaica_sign" ? { text: "משפחת לוי" } : {}));
+  if (LOOPS[id] || REAL[id]) { /* video or photo card: nothing to draw */ }
+  else if (!p.quote_only) Preview.render(c.querySelector("svg"), id, Object.assign({}, p.defaults));
   else c.querySelector("svg").outerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-hidden="true" focusable="false"><path d="M60 230 Q200 40 340 230 L300 240 Q200 110 100 240 Z" fill="rgba(28,179,207,.14)" stroke="#1cb3cf" stroke-width="2"/></svg>';
   c.addEventListener("click", function () { track("cta_click", { product: id, where: "card" }); });
 });
 cards.querySelector('[data-id="cutfile"]').addEventListener("click", function () { track("cta_click", { product: "cutfile", where: "card" }); });
+// Loops play only while their card is on screen (a phone never pulls all four at once); reduced motion keeps the poster.
+(function () {
+  var vids = [].slice.call(cards.querySelectorAll("video"));
+  if (!vids.length || !("IntersectionObserver" in window)) return;
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  // The loop opens on an empty frame (the build starts from nothing); the poster is the full product at 6.5 s.
+  // The first play starts at the poster frame, so the card never jumps from a full product to a blank one.
+  var POSTER_T = 6.5;
+  function first(v) {
+    if (v.dataset.started) return; v.dataset.started = "1";
+    try { v.currentTime = POSTER_T; } catch (e) {}
+    v.addEventListener("loadedmetadata", function () { if (v.currentTime < POSTER_T - 0.5) v.currentTime = POSTER_T; }, { once: true }); // Safari ignores a seek before metadata
+  }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { first(e.target); var pr = e.target.play(); if (pr && pr.catch) pr.catch(function () {}); } // iOS Low Power Mode refuses: poster stays
+      else e.target.pause();
+    });
+  }, { threshold: 0.35 });
+  vids.forEach(function (v) { io.observe(v); });
+})();
 track("page_view");
 document.fonts ? document.fonts.ready.then(heroUpdate) : heroUpdate();
 heroUpdate();
