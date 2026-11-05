@@ -17,7 +17,10 @@ var SITE = {
   accessibility_url: "",             // our own statement page, after Meir / a lawyer
   // "In reality" photos, only once approved. id -> { panel: 4:3 image, card: 16:10 image, alt, by: "meir" | "ai" }.
   // by "meir" = Meir's own work ("עבודה של בית הפרספקס"); by "ai" = studio visualization ("הדמיה להמחשה"), never shown as a customer photo.
-  real: {},
+  real: {
+    // Meir's install photo, cropped (no bottles, no brands). OK via Yakir 5.11. No card: this home card plays a loop.
+    candy_dispenser: { panel: "media/real-candy_dispenser-panel.webp", alt: "מתקני פרספקס עם מכסים על ציר, מלאים בממתקים, בחנות ממתקים", by: "meir" }
+  },
   analytics: { cloudflare_token: "" }, // Cloudflare Web Analytics (decided 4.11). Paste the site token here; empty = nothing loads
   payment: { provider: "whatsapp" }, // "whatsapp" now; "grow" | "payplus" | "cardcom" once Meir's rates are confirmed (site/order.js adapters)
   trust: {

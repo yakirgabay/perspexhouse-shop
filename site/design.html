@@ -229,7 +229,7 @@ function submitQuote() {
 var REAL = (SITE.real || {})[id];
 function realFigure(r, cls) {
   var meir = r.by === "meir";
-  return '<figure class="real ' + (cls || "") + '"><h2>' + (meir ? "ככה זה נראה אצל לקוח" : "ככה זה ייראה במקום") + '</h2>' +
+  return '<figure class="real ' + (cls || "") + '"><h2>' + (meir ? "דוגמה מעבודה אצל לקוח" : "ככה זה ייראה במקום") + '</h2>' +
     '<img data-real src="' + r.panel + '" alt="' + r.alt + '" loading="lazy">' +
     '<figcaption>' + (meir ? "עבודה של בית הפרספקס" : "הדמיה להמחשה") + ' · המידות שלכם בשרטוט</figcaption></figure>';
 }

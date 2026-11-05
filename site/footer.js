@@ -1,5 +1,5 @@
 // One footer for every page, filled from SITE (config.js). Fields Meir hasn't given yet stay hidden.
-// Copy: docs/copy-HE.md "פוטר". The made-to-order line is the disclosure for custom items (to confirm with Meir).
+// Copy: docs/copy-HE.md "פוטר". The made-to-order line is the disclosure for custom items (Meir approved, via Yakir 5.11).
 (function () {
   var f = document.getElementById("foot"); if (!f) return;
   var tel = SITE.phone.replace(/-/g, "");
