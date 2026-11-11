@@ -160,6 +160,7 @@ h2{font-size:clamp(1.4rem,4.5vw,2rem);margin-block:4px 16px}
 .real{margin-block:18px 8px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--bg)}
 .real h2{font-size:1rem;font-weight:800;padding:12px 14px 8px;margin:0}
 .real img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.real .more{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3px;margin-top:3px}
 .real figcaption{font-size:.8rem;color:var(--muted);padding:8px 14px 12px}
 .stage .real.in-stage{margin:12px;flex:1 1 auto}
 .sticky-cta{position:fixed;inset-inline:0;bottom:0;z-index:45;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line)}

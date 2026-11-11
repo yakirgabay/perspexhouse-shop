@@ -1,0 +1,12 @@
+{
+  "cleanUrls": false,
+  "rewrites": [
+    { "source": "/", "destination": "/site/index.html" },
+    { "source": "/calc/:path*", "destination": "/calc/:path*" },
+    { "source": "/site/:path*", "destination": "/site/:path*" },
+    { "source": "/:path*", "destination": "/site/:path*" }
+  ],
+  "headers": [
+    { "source": "/(.*)", "headers": [ { "key": "X-Robots-Tag", "value": "noindex" } ] }
+  ]
+}

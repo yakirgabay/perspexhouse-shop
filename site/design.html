@@ -227,10 +227,11 @@ function submitQuote() {
 // "In reality": the finished product in a real place, at the end of the fields, right above the order button (round 3, option B).
 // Shown only for an approved photo (SITE.real). No dimensions on it: the drawing above carries the customer's sizes.
 var REAL = (SITE.real || {})[id];
+// r.more = up to 2 extra photos, shown small under the main one (gallery, Yakir 11.11). Same label covers all of them.
 function realFigure(r, cls) {
-  var meir = r.by === "meir";
-  return '<figure class="real ' + (cls || "") + '"><h2>' + (meir ? "דוגמה מעבודה אצל לקוח" : "ככה זה ייראה במקום") + '</h2>' +
-    '<img data-real src="' + r.panel + '" alt="' + r.alt + '" loading="lazy">' +
+  var meir = r.by === "meir", more = (r.more || []).map(function (m) { return '<img data-real src="' + m.src + '" alt="' + m.alt + '" loading="lazy">'; }).join("");
+  return '<figure class="real ' + (cls || "") + '"><h2>' + (meir ? "מהעבודות שלנו" : "ככה זה ייראה במקום") + '</h2>' +
+    '<img data-real src="' + r.panel + '" alt="' + r.alt + '" loading="lazy">' + (more ? '<div class="more">' + more + '</div>' : "") +
     '<figcaption>' + (meir ? "עבודה של בית הפרספקס" : "הדמיה להמחשה") + ' · המידות שלכם בשרטוט</figcaption></figure>';
 }
 if (REAL && !F.quote) form.insertAdjacentHTML("afterend", realFigure(REAL));
